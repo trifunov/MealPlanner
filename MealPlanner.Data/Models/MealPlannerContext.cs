@@ -14,6 +14,11 @@ namespace MealPlanner.Data.Models
 
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Company> Companies { get; set; }
+        public DbSet<Meal> Meals { get; set; }
+        public DbSet<Allergen> Allergens { get; set; }
+        public DbSet<Ingredient> Ingredients { get; set; }
+        public DbSet<MealAllergen> MealAllergens { get; set; }
+        public DbSet<MealIngredient> MealIngredients { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,7 +43,7 @@ namespace MealPlanner.Data.Models
                 .WithMany(a => a.MealAllergens)
                 .HasForeignKey(ma => ma.AllergenId);
 
-            modelBuilder.Entity<MealIngredient>().HasKey(mi => new { mi.MealId, mi.Ingredient });
+            modelBuilder.Entity<MealIngredient>().HasKey(mi => new { mi.MealId, mi.IngredientId });
             modelBuilder.Entity<MealIngredient>()
                 .HasOne(mi => mi.Meal)
                 .WithMany(m => m.MealIngredients)
@@ -53,6 +58,10 @@ namespace MealPlanner.Data.Models
                 .IsUnique();
 
             modelBuilder.Entity<Ingredient>()
+                .HasIndex(u => u.Name)
+                .IsUnique();
+
+            modelBuilder.Entity<Meal>()
                 .HasIndex(u => u.Name)
                 .IsUnique();
         }

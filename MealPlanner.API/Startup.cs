@@ -52,8 +52,13 @@ namespace MealPlanner.API
             services.AddScoped<ICompanyRepository, CompanyRepository>();
             services.AddScoped<IEmployeeManager, EmployeeManager>();
             services.AddScoped<IMealRepository, MealRepository>();
+            services.AddScoped<IIngredientRepository, IngredientRepository>();
+            services.AddScoped<IAllergenRepository, AllergenRepository>();
             services.AddScoped<ICompanyManager, CompanyManager>();
             services.AddScoped<IAccountManager, AccountManager>();
+            services.AddScoped<IMealManager, MealManager>();
+            services.AddScoped<IIngredientManager, IngredientManager>();
+            services.AddScoped<IAllergenManager, AllergenManager>();
 
             services.AddAuthentication(options =>
             {
@@ -88,7 +93,7 @@ namespace MealPlanner.API
                 app.UseHsts();
             }
 
-            string[] origins = new string[] { "http://localhost:4200", "http://mealplannerui.azurewebsites.net" };
+            string[] origins = new string[] { "http://localhost:4200", "http://mealplannerui.azurewebsites.net", "https://dalma.solutionforit.org/", "http://dalma.solutionforit.org/" };
             app.UseCors(b => b.AllowAnyMethod().AllowAnyHeader().WithOrigins(origins));
             app.UseMvc();
             app.UseHttpsRedirection();

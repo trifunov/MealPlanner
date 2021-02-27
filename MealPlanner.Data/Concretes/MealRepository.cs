@@ -1,26 +1,46 @@
 ﻿using MealPlanner.Data.Interfaces;
 using MealPlanner.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace MealPlanner.Data.Concretes
 {
     public class MealRepository : IMealRepository
     {
+        private readonly MealPlannerContext _context;
+
+        public MealRepository(MealPlannerContext context)
+        {
+            _context = context;
+        }
+
         public void Add(Meal meal)
         {
-            throw new NotImplementedException();
+            _context.Meals.Add(meal);
+            _context.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            var meal = _context.Meals.Find(id);
+
+            if (meal != null)
+            {
+                _context.Meals.Remove(meal);
+                _context.SaveChanges();
+            }
+            else
+            {
+                throw new Exception("Meal not found");
+            }
         }
 
         public List<Meal> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.Meals.Include(x => x.MealAllergens).ThenInclude(x => x.Allergen).Include(x => x.MealIngredients).ThenInclude(x => x.Ingredient).ToList();
         }
 
         public Meal GetById(int id)
@@ -28,9 +48,21 @@ namespace MealPlanner.Data.Concretes
             throw new NotImplementedException();
         }
 
-        public void Update(Meal meal)
+        public void Update(Meal mealInput)
         {
-            throw new NotImplementedException();
+            var meal = _context.Meals.Find(mealInput.Id);
+
+            if (meal != null)
+            {
+                meal.Name = mealInput.Name;
+                meal.NameForeign = mealInput.NameForeign;
+                meal.ImageBase64 = mealInput.ImageBase64;
+                _context.SaveChanges();
+            }
+            else
+            {
+                throw new Exception("Meal not found");
+            }
         }
     }
 }

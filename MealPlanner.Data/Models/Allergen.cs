@@ -12,6 +12,7 @@ namespace MealPlanner.Data.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Name { get; set; }
+        public string NameForeign { get; set; }
         public ICollection<MealAllergen> MealAllergens { get; set; }
     }
 }

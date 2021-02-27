@@ -19,6 +19,25 @@ namespace MealPlanner.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("MealPlanner.Data.Models.Allergen", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("NameForeign");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
+
+                    b.ToTable("Allergens");
+                });
+
             modelBuilder.Entity("MealPlanner.Data.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -104,6 +123,72 @@ namespace MealPlanner.Data.Migrations
                         .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("MealPlanner.Data.Models.Ingredient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("NameForeign");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
+
+                    b.ToTable("Ingredients");
+                });
+
+            modelBuilder.Entity("MealPlanner.Data.Models.Meal", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ImageBase64");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("NameForeign");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
+
+                    b.ToTable("Meals");
+                });
+
+            modelBuilder.Entity("MealPlanner.Data.Models.MealAllergen", b =>
+                {
+                    b.Property<int>("MealId");
+
+                    b.Property<int>("AllergenId");
+
+                    b.HasKey("MealId", "AllergenId");
+
+                    b.HasIndex("AllergenId");
+
+                    b.ToTable("MealAllergens");
+                });
+
+            modelBuilder.Entity("MealPlanner.Data.Models.MealIngredient", b =>
+                {
+                    b.Property<int>("MealId");
+
+                    b.Property<int>("IngredientId");
+
+                    b.HasKey("MealId", "IngredientId");
+
+                    b.HasIndex("IngredientId");
+
+                    b.ToTable("MealIngredients");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -225,6 +310,32 @@ namespace MealPlanner.Data.Migrations
                     b.HasOne("MealPlanner.Data.Models.ApplicationUser", "User")
                         .WithOne("Employee")
                         .HasForeignKey("MealPlanner.Data.Models.Employee", "UserId");
+                });
+
+            modelBuilder.Entity("MealPlanner.Data.Models.MealAllergen", b =>
+                {
+                    b.HasOne("MealPlanner.Data.Models.Allergen", "Allergen")
+                        .WithMany("MealAllergens")
+                        .HasForeignKey("AllergenId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("MealPlanner.Data.Models.Meal", "Meal")
+                        .WithMany("MealAllergens")
+                        .HasForeignKey("MealId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("MealPlanner.Data.Models.MealIngredient", b =>
+                {
+                    b.HasOne("MealPlanner.Data.Models.Ingredient", "Ingredient")
+                        .WithMany("MealIngredients")
+                        .HasForeignKey("IngredientId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("MealPlanner.Data.Models.Meal", "Meal")
+                        .WithMany("MealIngredients")
+                        .HasForeignKey("MealId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
