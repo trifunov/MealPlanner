@@ -15,10 +15,12 @@ namespace MealPlanner.Service.Concretes
     public class AccountManager : IAccountManager
     {
         private UserManager<ApplicationUser> _userManager;
+        private IEmployeeManager _employeeManager;
 
-        public AccountManager(UserManager<ApplicationUser> userManager)
+        public AccountManager(UserManager<ApplicationUser> userManager, IEmployeeManager employeeManager)
         {
             _userManager = userManager;
+            _employeeManager = employeeManager;
         }
 
         public void Register(RegisterDTO registerDto)
@@ -41,11 +43,12 @@ namespace MealPlanner.Service.Concretes
             var user = _userManager.FindByNameAsync(loginDto.Username).Result;
             if (user != null && _userManager.CheckPasswordAsync(user, loginDto.Password).Result)
             {
-
+                var employee = _employeeManager.GetByUserId(user.Id);
                 var authClaims = new[]
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim("CompanyId", employee.CompanyId.ToString())
                 };
 
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("BiggerSecureKeyBecauseOfSize"));

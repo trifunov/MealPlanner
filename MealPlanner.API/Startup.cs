@@ -6,6 +6,7 @@ using MealPlanner.Service.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -48,17 +49,21 @@ namespace MealPlanner.API
                 opt.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<MealPlannerContext>().AddDefaultTokenProviders();
 
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddScoped<ICompanyRepository, CompanyRepository>();
             services.AddScoped<IEmployeeManager, EmployeeManager>();
             services.AddScoped<IMealRepository, MealRepository>();
             services.AddScoped<IIngredientRepository, IngredientRepository>();
             services.AddScoped<IAllergenRepository, AllergenRepository>();
+            services.AddScoped<IPlanRepository, PlanRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<ICompanyManager, CompanyManager>();
             services.AddScoped<IAccountManager, AccountManager>();
             services.AddScoped<IMealManager, MealManager>();
             services.AddScoped<IIngredientManager, IngredientManager>();
             services.AddScoped<IAllergenManager, AllergenManager>();
+            services.AddScoped<IPlanManager, PlanManager>();
 
             services.AddAuthentication(options =>
             {

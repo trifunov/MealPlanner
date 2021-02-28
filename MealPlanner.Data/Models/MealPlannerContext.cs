@@ -19,6 +19,8 @@ namespace MealPlanner.Data.Models
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<MealAllergen> MealAllergens { get; set; }
         public DbSet<MealIngredient> MealIngredients { get; set; }
+        public DbSet<Plan> Plans { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -63,6 +65,26 @@ namespace MealPlanner.Data.Models
 
             modelBuilder.Entity<Meal>()
                 .HasIndex(u => u.Name)
+                .IsUnique();
+
+            modelBuilder.Entity<Employee>()
+            .HasMany(e => e.Orders)
+            .WithOne(o => o.Employee);
+
+            modelBuilder.Entity<Plan>()
+            .HasMany(p => p.Orders)
+            .WithOne(o => o.Plan);
+
+            modelBuilder.Entity<Company>()
+            .HasMany(c => c.Plans)
+            .WithOne(p => p.Company);
+
+            modelBuilder.Entity<Meal>()
+            .HasMany(m => m.Plans)
+            .WithOne(p => p.Meal);
+
+            modelBuilder.Entity<Plan>()
+                .HasIndex(p => new { p.MealId, p.CompanyId, p.Shifts, p.ActiveFrom, p.ActiveTo })
                 .IsUnique();
         }
     }

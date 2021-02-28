@@ -14,6 +14,7 @@ namespace MealPlanner.Data.Models
         public string Name { get; set; }
         public string NameForeign { get; set; }
         public string ImageBase64 { get; set; }
+        public ICollection<Plan> Plans { get; set; }
         public ICollection<MealAllergen> MealAllergens { get; set; }
         public ICollection<MealIngredient> MealIngredients { get; set; }
     }

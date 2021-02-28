@@ -15,5 +15,6 @@ namespace MealPlanner.Data.Models
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }
         public Company Company { get; set; }
+        public ICollection<Order> Orders { get; set; }
     }
 }

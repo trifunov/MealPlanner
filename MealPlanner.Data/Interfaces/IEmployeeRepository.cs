@@ -11,6 +11,7 @@ namespace MealPlanner.Data.Interfaces
         void Delete(int id);
         void Update(Employee employee);
         Employee GetById(int id);
+        Employee GetByUserId(string userId);
         List<Employee> GetAll();
         List<Employee> GetByCompanyId(int companyId);
         List<ApplicationUser> GetUsersWithoutEmployee();

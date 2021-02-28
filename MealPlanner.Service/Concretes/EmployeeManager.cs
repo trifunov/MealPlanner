@@ -73,6 +73,18 @@ namespace MealPlanner.Service.Concretes
             return employeeDTO;
         }
 
+        public EmployeeDTO GetByUserId(string userId)
+        {
+            var employee = _employeeRepository.GetByUserId(userId);
+            var employeeDTO = new EmployeeDTO();
+            employeeDTO.Id = employee.Id;
+            employeeDTO.Rfid = employee.Rfid;
+            employeeDTO.UserId = employee.UserId;
+            employeeDTO.CompanyId = employee.Company.Id;
+
+            return employeeDTO;
+        }
+
         public List<UserEmployeeDTO> GetByCompanyId(int companyId)
         {
             var employeeDTOs = new List<UserEmployeeDTO>();

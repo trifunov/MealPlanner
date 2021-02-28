@@ -191,6 +191,60 @@ namespace MealPlanner.Data.Migrations
                     b.ToTable("MealIngredients");
                 });
 
+            modelBuilder.Entity("MealPlanner.Data.Models.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<int?>("EmployeeId");
+
+                    b.Property<bool>("IsDelivered");
+
+                    b.Property<int?>("PlanId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("PlanId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("MealPlanner.Data.Models.Plan", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("ActiveFrom");
+
+                    b.Property<DateTime>("ActiveTo");
+
+                    b.Property<int>("CompanyId");
+
+                    b.Property<DateTime>("EditableFrom");
+
+                    b.Property<DateTime>("EditableTo");
+
+                    b.Property<int>("MealId");
+
+                    b.Property<string>("Shifts");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("MealId", "CompanyId", "Shifts", "ActiveFrom", "ActiveTo")
+                        .IsUnique()
+                        .HasFilter("[Shifts] IS NOT NULL");
+
+                    b.ToTable("Plans");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -334,6 +388,30 @@ namespace MealPlanner.Data.Migrations
 
                     b.HasOne("MealPlanner.Data.Models.Meal", "Meal")
                         .WithMany("MealIngredients")
+                        .HasForeignKey("MealId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("MealPlanner.Data.Models.Order", b =>
+                {
+                    b.HasOne("MealPlanner.Data.Models.Employee", "Employee")
+                        .WithMany("Orders")
+                        .HasForeignKey("EmployeeId");
+
+                    b.HasOne("MealPlanner.Data.Models.Plan", "Plan")
+                        .WithMany("Orders")
+                        .HasForeignKey("PlanId");
+                });
+
+            modelBuilder.Entity("MealPlanner.Data.Models.Plan", b =>
+                {
+                    b.HasOne("MealPlanner.Data.Models.Company", "Company")
+                        .WithMany("Plans")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("MealPlanner.Data.Models.Meal", "Meal")
+                        .WithMany("Plans")
                         .HasForeignKey("MealId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
