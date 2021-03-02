@@ -20,6 +20,5 @@ namespace MealPlanner.Data.Models
         public int CompanyId { get; set; } // added for usage in Unique Index
         public Company Company { get; set; }
         public Meal Meal { get; set; }
-        public ICollection<Order> Orders { get; set; }
     }
 }

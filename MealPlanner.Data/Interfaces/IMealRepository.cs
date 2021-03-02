@@ -12,5 +12,6 @@ namespace MealPlanner.Data.Interfaces
         void Update(Meal meal);
         Meal GetById(int id);
         List<Meal> GetAll();
+        List<Meal> GetValid(int companyId, int shift, DateTime date);
     }
 }

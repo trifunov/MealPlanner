@@ -17,5 +17,6 @@ namespace MealPlanner.Data.Models
         public ICollection<Plan> Plans { get; set; }
         public ICollection<MealAllergen> MealAllergens { get; set; }
         public ICollection<MealIngredient> MealIngredients { get; set; }
+        public ICollection<Order> Orders { get; set; }
     }
 }

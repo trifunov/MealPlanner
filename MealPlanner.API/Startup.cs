@@ -64,6 +64,7 @@ namespace MealPlanner.API
             services.AddScoped<IIngredientManager, IngredientManager>();
             services.AddScoped<IAllergenManager, AllergenManager>();
             services.AddScoped<IPlanManager, PlanManager>();
+            services.AddScoped<IOrderManager, OrderManager>();
 
             services.AddAuthentication(options =>
             {

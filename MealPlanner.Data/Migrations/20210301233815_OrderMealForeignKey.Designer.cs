@@ -4,14 +4,16 @@ using MealPlanner.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MealPlanner.Data.Migrations
 {
     [DbContext(typeof(MealPlannerContext))]
-    partial class MealPlannerContextModelSnapshot : ModelSnapshot
+    [Migration("20210301233815_OrderMealForeignKey")]
+    partial class OrderMealForeignKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -199,13 +201,11 @@ namespace MealPlanner.Data.Migrations
 
                     b.Property<DateTime>("Date");
 
-                    b.Property<int>("EmployeeId");
+                    b.Property<int?>("EmployeeId");
 
                     b.Property<bool>("IsDelivered");
 
-                    b.Property<int>("MealId");
-
-                    b.Property<int>("Shift");
+                    b.Property<int?>("MealId");
 
                     b.HasKey("Id");
 
@@ -398,13 +398,11 @@ namespace MealPlanner.Data.Migrations
                 {
                     b.HasOne("MealPlanner.Data.Models.Employee", "Employee")
                         .WithMany("Orders")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("EmployeeId");
 
                     b.HasOne("MealPlanner.Data.Models.Meal", "Meal")
                         .WithMany("Orders")
-                        .HasForeignKey("MealId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("MealId");
                 });
 
             modelBuilder.Entity("MealPlanner.Data.Models.Plan", b =>

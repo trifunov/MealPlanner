@@ -71,9 +71,9 @@ namespace MealPlanner.Data.Models
             .HasMany(e => e.Orders)
             .WithOne(o => o.Employee);
 
-            modelBuilder.Entity<Plan>()
-            .HasMany(p => p.Orders)
-            .WithOne(o => o.Plan);
+            modelBuilder.Entity<Meal>()
+            .HasMany(m => m.Orders)
+            .WithOne(o => o.Meal);
 
             modelBuilder.Entity<Company>()
             .HasMany(c => c.Plans)

@@ -13,7 +13,10 @@ namespace MealPlanner.Data.Models
         public int Id { get; set; }
         public DateTime Date { get; set; }
         public bool IsDelivered { get; set; }
-        public Plan Plan { get; set; }
+        public int MealId { get; set; }
+        public int Shift { get; set; }
+        public int EmployeeId { get; set; }
+        public Meal Meal { get; set; }
         public Employee Employee { get; set; }
     }
 }

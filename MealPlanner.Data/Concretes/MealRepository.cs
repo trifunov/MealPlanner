@@ -48,6 +48,12 @@ namespace MealPlanner.Data.Concretes
             throw new NotImplementedException();
         }
 
+        public List<Meal> GetValid(int companyId, int shift, DateTime date)
+        {
+            var mealIds = _context.Plans.Where(x => x.CompanyId == companyId && x.Shifts.Contains(shift.ToString()) && date >= x.ActiveFrom && date <= x.ActiveTo).Select(x => x.MealId).Distinct();
+            return _context.Meals.Where(x => mealIds.Contains(x.Id)).Include(x => x.MealAllergens).ThenInclude(x => x.Allergen).Include(x => x.MealIngredients).ThenInclude(x => x.Ingredient).ToList();
+        }
+
         public void Update(Meal mealInput)
         {
             var meal = _context.Meals.Find(mealInput.Id);
