@@ -99,7 +99,14 @@ namespace MealPlanner.API
                 app.UseHsts();
             }
 
-            string[] origins = new string[] { "http://localhost:4200", "http://mealplannerui.azurewebsites.net", "https://dalma.solutionforit.org/", "http://dalma.solutionforit.org/" };
+            string[] origins = new string[] 
+            { 
+                "http://localhost:4200", 
+                "http://mealplannerui.azurewebsites.net", 
+                "https://dalma.solutionforit.org/",
+                "http://dalma.solutionforit.org/",
+                "http://dom.dalma.com.mk/"
+            };
             app.UseCors(b => b.AllowAnyMethod().AllowAnyHeader().WithOrigins(origins));
             app.UseMvc();
             app.UseHttpsRedirection();
