@@ -66,7 +66,51 @@ namespace MealPlanner.Service.Concretes
                 {
                     success = true,
                     token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo
+                    expiration = token.ValidTo,
+                    username = user.UserName,
+                    role = "Administrator"
+                });
+            }
+            else
+            {
+                return JObject.FromObject(new
+                {
+                    success = false
+                });
+            }
+        }
+
+        public JObject LoginRfid(string rfid)
+        {
+            var employee = _employeeManager.GetByRfid(rfid);
+            var user = _userManager.FindByIdAsync(employee.UserId).Result;
+            if (user != null)
+            {
+                var authClaims = new[]
+                {
+                    new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim("CompanyId", employee.CompanyId.ToString()),
+                    new Claim("EmployeeId", employee.Id.ToString())
+                };
+
+                var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("BiggerSecureKeyBecauseOfSize"));
+
+                var token = new JwtSecurityToken(
+                    issuer: "trifunov",
+                    audience: "trifunov",
+                    expires: DateTime.Now.AddHours(10),
+                    claims: authClaims,
+                    signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+                    );
+
+                return JObject.FromObject(new
+                {
+                    success = true,
+                    token = new JwtSecurityTokenHandler().WriteToken(token),
+                    expiration = token.ValidTo,
+                    username = user.UserName,
+                    role = "Administrator"
                 });
             }
             else

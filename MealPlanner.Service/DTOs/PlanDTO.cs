@@ -11,8 +11,7 @@ namespace MealPlanner.Service.DTOs
         public List<string> ShiftNames { get; set; }
         public DateTime EditableFrom { get; set; }
         public DateTime EditableTo { get; set; }
-        public DateTime ActiveFrom { get; set; }
-        public DateTime ActiveTo { get; set; }
+        public DateTime Date { get; set; }
         public int CompanyId { get; set; }
         public List<int> MealIds { get; set; }
         public List<MealDTO> Meals { get; set; }

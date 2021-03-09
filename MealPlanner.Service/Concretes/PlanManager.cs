@@ -25,8 +25,7 @@ namespace MealPlanner.Service.Concretes
             {
                 plans.Add(new Plan
                 {
-                    ActiveFrom = planDto.ActiveFrom,
-                    ActiveTo = planDto.ActiveTo,
+                    Date = planDto.Date,
                     EditableFrom = planDto.EditableFrom,
                     EditableTo = planDto.EditableTo,
                     Shifts = string.Join(",", planDto.Shifts),
@@ -62,8 +61,7 @@ namespace MealPlanner.Service.Concretes
                     Ids = item.Ids,
                     Shifts = shifts,
                     ShiftNames = shiftNames,
-                    ActiveFrom = item.ActiveFrom,
-                    ActiveTo = item.ActiveTo,
+                    Date = item.Date,
                     EditableFrom = item.EditableFrom,
                     EditableTo = item.EditableTo,
                     CompanyId = item.CompanyId,
@@ -86,8 +84,7 @@ namespace MealPlanner.Service.Concretes
                 Ids = plan.Ids,
                 Shifts = shifts,
                 ShiftNames = shiftNames,
-                ActiveFrom = plan.ActiveFrom,
-                ActiveTo = plan.ActiveTo,
+                Date = plan.Date,
                 EditableFrom = plan.EditableFrom,
                 EditableTo = plan.EditableTo,
                 CompanyId = plan.CompanyId,

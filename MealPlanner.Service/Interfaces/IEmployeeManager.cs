@@ -12,6 +12,7 @@ namespace MealPlanner.Service.Interfaces
         void Update(EmployeeDTO employeeDto);
         EmployeeDTO GetById(int id);
         EmployeeDTO GetByUserId(string userId);
+        EmployeeDTO GetByRfid(string rfid);
         List<EmployeeDTO> GetAll();
         List<UserEmployeeDTO> GetByCompanyId(int companyId);
         List<UserEmployeeDTO> GetUsersWithoutEmployee();

@@ -57,5 +57,27 @@ namespace MealPlanner.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult LoginRfid([FromBody] LoginRfidDTO loginDto)
+        {
+            try
+            {
+                var result = _accountManager.LoginRfid(loginDto.Rfid);
+                if (Convert.ToBoolean(result.GetValue("success")) == true)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return Unauthorized();
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

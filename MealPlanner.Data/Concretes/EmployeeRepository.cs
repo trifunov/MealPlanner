@@ -82,6 +82,20 @@ namespace MealPlanner.Data.Concretes
             }
         }
 
+        public Employee GetByRfid(string rfid)
+        {
+            var employee = _context.Employees.Include(x => x.Company).FirstOrDefault(x => x.Rfid == rfid);
+
+            if (employee != null)
+            {
+                return employee;
+            }
+            else
+            {
+                throw new Exception("Employee not found");
+            }
+        }
+
         public List<Employee> GetAll()
         {
             return _context.Employees.ToList();

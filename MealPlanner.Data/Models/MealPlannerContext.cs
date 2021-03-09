@@ -71,9 +71,9 @@ namespace MealPlanner.Data.Models
             .HasMany(e => e.Orders)
             .WithOne(o => o.Employee);
 
-            modelBuilder.Entity<Meal>()
-            .HasMany(m => m.Orders)
-            .WithOne(o => o.Meal);
+            modelBuilder.Entity<Plan>()
+            .HasMany(p => p.Orders)
+            .WithOne(o => o.Plan);
 
             modelBuilder.Entity<Company>()
             .HasMany(c => c.Plans)
@@ -84,7 +84,7 @@ namespace MealPlanner.Data.Models
             .WithOne(p => p.Meal);
 
             modelBuilder.Entity<Plan>()
-                .HasIndex(p => new { p.MealId, p.CompanyId, p.Shifts, p.ActiveFrom, p.ActiveTo })
+                .HasIndex(p => new { p.MealId, p.CompanyId, p.Shifts, p.Date })
                 .IsUnique();
         }
     }

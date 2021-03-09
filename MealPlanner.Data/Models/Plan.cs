@@ -14,11 +14,11 @@ namespace MealPlanner.Data.Models
         public string Shifts { get; set; }
         public DateTime EditableFrom { get; set; }
         public DateTime EditableTo { get; set; }
-        public DateTime ActiveFrom { get; set; }
-        public DateTime ActiveTo { get; set; }
+        public DateTime Date { get; set; }
         public int MealId { get; set; } // added for usage in Unique Index
         public int CompanyId { get; set; } // added for usage in Unique Index
         public Company Company { get; set; }
         public Meal Meal { get; set; }
+        public ICollection<Order> Orders { get; set; }
     }
 }

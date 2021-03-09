@@ -21,10 +21,9 @@ namespace MealPlanner.Service.Concretes
         {
             var order = new Order
             { 
-                Date = orderDto.Date,
                 EmployeeId = orderDto.EmployeeId,
                 IsDelivered = orderDto.IsDelivered,
-                MealId = orderDto.MealId,
+                PlanId = orderDto.PlanId,
                 Shift = orderDto.Shift
             };
 
@@ -36,10 +35,9 @@ namespace MealPlanner.Service.Concretes
             var order = new Order
             {
                 Id = orderDto.Id,
-                Date = orderDto.Date,
                 EmployeeId = orderDto.EmployeeId,
                 IsDelivered = orderDto.IsDelivered,
-                MealId = orderDto.MealId,
+                PlanId = orderDto.PlanId,
                 Shift = orderDto.Shift
             };
 

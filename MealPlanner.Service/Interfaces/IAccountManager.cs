@@ -10,5 +10,6 @@ namespace MealPlanner.Service.Interfaces
     {
         void Register(RegisterDTO registerDto);
         JObject Login(LoginDTO loginDto);
+        JObject LoginRfid(string rfid);
     }
 }

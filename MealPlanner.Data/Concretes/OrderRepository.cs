@@ -18,7 +18,7 @@ namespace MealPlanner.Data.Concretes
 
         public void Add(Order order)
         {
-            var orderDb = _context.Orders.FirstOrDefault(x => x.Date == order.Date && x.EmployeeId == order.EmployeeId && x.Shift == order.Shift);
+            var orderDb = _context.Orders.FirstOrDefault(x => x.PlanId == order.PlanId && x.EmployeeId == order.EmployeeId && x.Shift == order.Shift);
 
             if (orderDb == null)
             {
@@ -27,7 +27,7 @@ namespace MealPlanner.Data.Concretes
             }
             else
             {
-                orderDb.MealId = order.MealId;
+                orderDb.PlanId = order.PlanId;
                 _context.SaveChanges();
             }
         }
@@ -53,7 +53,7 @@ namespace MealPlanner.Data.Concretes
 
             if (order != null)
             {
-                order.MealId = orderInput.MealId;
+                order.PlanId = orderInput.PlanId;
                 order.IsDelivered = orderInput.IsDelivered;
                 _context.SaveChanges();
             }

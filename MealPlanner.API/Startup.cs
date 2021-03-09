@@ -82,7 +82,7 @@ namespace MealPlanner.API
                     ValidateAudience = false,
                     ValidAudience = "trifunov",
                     ValidIssuer = "trifunov",
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("BiggerSecureKeyBecauseOfSize"))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<string>("JwtSigningKey")))
                 };
             });
         }

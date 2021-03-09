@@ -40,7 +40,7 @@ namespace MealPlanner.Data.Concretes
 
         public List<Plan> GetActivePlans(int companyId)
         {
-            return _context.Plans.Where(x => x.CompanyId == companyId && DateTime.Now > x.ActiveFrom && DateTime.Now < x.ActiveTo).ToList();
+            return _context.Plans.Where(x => x.CompanyId == companyId && DateTime.Now > x.Date).ToList();
         }
 
         public List<GroupedPlan> GetByCompanyIdGrouped(int companyId)
@@ -49,8 +49,7 @@ namespace MealPlanner.Data.Concretes
             { 
                 p.CompanyId, 
                 p.Shifts, 
-                p.ActiveFrom, 
-                p.ActiveTo,
+                p.Date,
                 p.EditableFrom,
                 p.EditableTo
             }).Select(g => new GroupedPlan
@@ -58,8 +57,7 @@ namespace MealPlanner.Data.Concretes
                 Ids = g.Select(x => x.Id).ToList(),
                 CompanyId = g.Key.CompanyId,
                 Shifts = g.Key.Shifts,
-                ActiveFrom = g.Key.ActiveFrom,
-                ActiveTo = g.Key.ActiveTo, 
+                Date = g.Key.Date,
                 EditableFrom = g.Key.EditableFrom,
                 EditableTo = g.Key.EditableTo,
                 MealIds = g.Select(x => x.MealId).ToList(),
@@ -73,8 +71,7 @@ namespace MealPlanner.Data.Concretes
             {
                 p.CompanyId,
                 p.Shifts,
-                p.ActiveFrom,
-                p.ActiveTo,
+                p.Date,
                 p.EditableFrom,
                 p.EditableTo
             }).Select(g => new GroupedPlan
@@ -82,8 +79,7 @@ namespace MealPlanner.Data.Concretes
                 Ids = g.Select(x => x.Id).ToList(),
                 CompanyId = g.Key.CompanyId,
                 Shifts = g.Key.Shifts,
-                ActiveFrom = g.Key.ActiveFrom,
-                ActiveTo = g.Key.ActiveTo,
+                Date = g.Key.Date,
                 EditableFrom = g.Key.EditableFrom,
                 EditableTo = g.Key.EditableTo,
                 MealIds = g.Select(x => x.MealId).ToList()

@@ -48,10 +48,24 @@ namespace MealPlanner.Data.Concretes
             throw new NotImplementedException();
         }
 
-        public List<Meal> GetValid(int companyId, int shift, DateTime date)
+        public List<MealJoined> GetValid(int companyId, int shift, DateTime date)
         {
-            var mealIds = _context.Plans.Where(x => x.CompanyId == companyId && x.Shifts.Contains(shift.ToString()) && date >= x.ActiveFrom && date <= x.ActiveTo).Select(x => x.MealId).Distinct();
-            return _context.Meals.Where(x => mealIds.Contains(x.Id)).Include(x => x.MealAllergens).ThenInclude(x => x.Allergen).Include(x => x.MealIngredients).ThenInclude(x => x.Ingredient).ToList();
+            var mealIds = _context.Plans.Where(x => x.CompanyId == companyId && x.Shifts.Contains(shift.ToString()) && date == x.Date).Select(x => x.MealId).Distinct().ToList();
+            var meals = _context.Meals.Include(x => x.Plans).Include(x => x.MealAllergens).ThenInclude(x => x.Allergen).Include(x => x.MealIngredients).ThenInclude(x => x.Ingredient).Where(x => mealIds.Contains(x.Id)).ToList();
+
+            var result = meals.Select( 
+                      meal => new MealJoined
+                      {
+                          Id = meal.Id,
+                          ImageBase64 = meal.ImageBase64,
+                          Name = meal.Name,
+                          NameForeign = meal.NameForeign,
+                          MealAllergens = meal.MealAllergens,
+                          MealIngredients = meal.MealIngredients,
+                          PlanId = meal.Plans.First().Id
+                      });
+
+            return result.ToList();
         }
 
         public void Update(Meal mealInput)
