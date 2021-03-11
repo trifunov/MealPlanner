@@ -12,5 +12,6 @@ namespace MealPlanner.Data.Interfaces
         List<Plan> GetActivePlans(int companyId);
         List<GroupedPlan> GetByCompanyIdGrouped(int companyId);
         GroupedPlan GetByIds(List<int> ids);
+        Plan GetById(int id);
     }
 }

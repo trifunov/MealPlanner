@@ -13,7 +13,7 @@ namespace MealPlanner.API.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     public class CompanyController : ControllerBase
     {
         private readonly ICompanyManager _companyManager;
@@ -43,6 +43,19 @@ namespace MealPlanner.API.Controllers
             try
             {
                 return Ok(_companyManager.GetById(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetName(int id)
+        {
+            try
+            {
+                return Ok(_companyManager.GetName(id));
             }
             catch (Exception ex)
             {

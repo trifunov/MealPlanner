@@ -45,7 +45,6 @@ namespace MealPlanner.Data.Concretes
             if (employee != null)
             {
                 employee.Rfid = employeeInput.Rfid;
-                employee.Company = employeeInput.Company;
                 _context.SaveChanges();
             }
             else
@@ -54,13 +53,26 @@ namespace MealPlanner.Data.Concretes
             }
         }
 
-        public Employee GetById(int id)
+        public EmployeeJoined GetById(int id)
         {
-            var employee = _context.Employees.Include(x => x.Company).FirstOrDefault(x => x.Id == id);
+            var employee = _context.Employees.Include(x => x.Company).Include(x => x.User).FirstOrDefault(x => x.Id == id);
 
             if (employee != null)
             {
-                return employee;
+                var resultRole = (from userRoles in _context.UserRoles
+                                  join role in _context.Roles on userRoles.RoleId equals role.Id
+                                  where userRoles.UserId == employee.UserId
+                                  select role.Name).FirstOrDefault();
+
+                return new EmployeeJoined
+                {
+                    Id = employee.Id,
+                    Rfid = employee.Rfid,
+                    User = employee.User,
+                    Company = employee.Company,
+                    UserId = employee.UserId,
+                    Role = (resultRole == null) ? "" : resultRole
+                };
             }
             else
             {
@@ -106,9 +118,28 @@ namespace MealPlanner.Data.Concretes
             return _context.Users.Include(x => x.Employee).Where(x => x.Employee == null).ToList();
         }
 
-        public List<Employee> GetByCompanyId(int companyId)
+        public List<EmployeeJoined> GetByCompanyId(int companyId)
         {
-            return _context.Employees.Include(x => x.Company).Include(x => x.User).Where(x => x.Company.Id == companyId).ToList();
+            var employees = _context.Employees.Include(x => x.Company).Include(x => x.User).Where(x => x.Company.Id == companyId);
+
+            var query = from employee in employees
+                        join userRole in _context.UserRoles on employee.UserId equals userRole.UserId 
+                        into groupedUserRoles
+                        from gur in groupedUserRoles.DefaultIfEmpty()
+                        join role in _context.Roles on gur.RoleId equals role.Id
+                        into groupedRoles
+                        from gr in groupedRoles.DefaultIfEmpty()
+                        select new EmployeeJoined 
+                        { 
+                            Id = employee.Id,
+                            Rfid = employee.Rfid,
+                            User = employee.User,
+                            Company = employee.Company,
+                            UserId = employee.UserId,
+                            Role = (gr == null) ? "" : gr.Name
+                        };
+
+            return query.ToList();
         }
     }
 }

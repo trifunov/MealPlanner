@@ -1,5 +1,6 @@
 ﻿using MealPlanner.Data.Interfaces;
 using MealPlanner.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace MealPlanner.Data.Concretes
 
         public void Add(Order order)
         {
-            var orderDb = _context.Orders.FirstOrDefault(x => x.PlanId == order.PlanId && x.EmployeeId == order.EmployeeId && x.Shift == order.Shift);
+            var orderDb = _context.Orders.Include(x => x.Plan).FirstOrDefault(x => x.Plan.Date == order.Plan.Date && x.EmployeeId == order.EmployeeId && x.Shift == order.Shift);
 
             if (orderDb == null)
             {
@@ -66,6 +67,20 @@ namespace MealPlanner.Data.Concretes
         public List<Order> GetOrdersByRfid(string rfid)
         {
             throw new NotImplementedException();
+        }
+
+        public int GetByDateAndShift(int employeeId, DateTime date, int shift)
+        {
+            var order = _context.Orders.Include(x => x.Plan).FirstOrDefault(x => x.EmployeeId == employeeId && x.Plan.Date == date && x.Shift == shift);
+
+            if(order != null)
+            {
+                return order.PlanId;
+            }
+            else
+            {
+                return 0;
+            }
         }
     }
 }

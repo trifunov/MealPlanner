@@ -10,11 +10,11 @@ namespace MealPlanner.Data.Interfaces
         void Add(Employee employee);
         void Delete(int id);
         void Update(Employee employee);
-        Employee GetById(int id);
+        EmployeeJoined GetById(int id);
         Employee GetByUserId(string userId);
         Employee GetByRfid(string rfid);
         List<Employee> GetAll();
-        List<Employee> GetByCompanyId(int companyId);
+        List<EmployeeJoined> GetByCompanyId(int companyId);
         List<ApplicationUser> GetUsersWithoutEmployee();
     }
 }

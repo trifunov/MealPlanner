@@ -24,7 +24,7 @@ namespace MealPlanner.Service.Concretes
             var employee = new Employee();
             employee.Rfid = employeeDto.Rfid;
             employee.UserId = employeeDto.UserId;
-            employee.Company = _companyRepository.GetById(employeeDto.CompanyId);
+            employee.CompanyId = employeeDto.CompanyId;
             _employeeRepository.Add(employee);
         }
 
@@ -38,8 +38,6 @@ namespace MealPlanner.Service.Concretes
             var employee = new Employee();
             employee.Id = employeeDto.Id;
             employee.Rfid = employeeDto.Rfid;
-            employee.UserId = employeeDto.UserId;
-            employee.Company = _companyRepository.GetById(employeeDto.CompanyId);
             _employeeRepository.Update(employee);
         }
 
@@ -61,14 +59,18 @@ namespace MealPlanner.Service.Concretes
             return employeeDTOs;
         }
 
-        public EmployeeDTO GetById(int id)
+        public UserEmployeeDTO GetById(int id)
         {
             var employee = _employeeRepository.GetById(id);
-            var employeeDTO = new EmployeeDTO();
+            var employeeDTO = new UserEmployeeDTO();
             employeeDTO.Id = employee.Id;
             employeeDTO.Rfid = employee.Rfid;
             employeeDTO.UserId = employee.UserId;
             employeeDTO.CompanyId = employee.Company.Id;
+            employeeDTO.Email = employee.User.Email;
+            employeeDTO.Username = employee.User.UserName;
+            employeeDTO.Role = employee.Role;
+            employeeDTO.Password = "";
 
             return employeeDTO;
         }
@@ -111,6 +113,7 @@ namespace MealPlanner.Service.Concretes
                 employeeDTO.CompanyId = employee.Company.Id;
                 employeeDTO.CompanyName = employee.Company.Name;
                 employeeDTO.Username = employee.User.UserName;
+                employeeDTO.Role = employee.Role;
                 employeeDTOs.Add(employeeDTO);
             }
 

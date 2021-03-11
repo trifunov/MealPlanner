@@ -65,6 +65,11 @@ namespace MealPlanner.Data.Concretes
             }).ToList();
         }
 
+        public Plan GetById(int id)
+        {
+            return _context.Plans.Find(id);
+        }
+
         public GroupedPlan GetByIds(List<int> ids)
         {
             return _context.Plans.Where(x => ids.Contains(x.Id)).GroupBy(p => new

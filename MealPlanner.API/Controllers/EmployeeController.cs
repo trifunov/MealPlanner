@@ -13,14 +13,16 @@ namespace MealPlanner.API.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeManager _employeeManager;
+        private readonly IAccountManager _accountManager;
 
-        public EmployeeController(IEmployeeManager employeeManager)
+        public EmployeeController(IEmployeeManager employeeManager, IAccountManager accountManager)
         {
             _employeeManager = employeeManager;
+            _accountManager = accountManager;
         }
 
         // GET: api/<controller>
@@ -51,10 +53,17 @@ namespace MealPlanner.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add([FromBody] EmployeeDTO employeeDTO)
+        public IActionResult Add([FromBody] UserEmployeeDTO employeeDTO)
         {
             try
             {
+                employeeDTO.UserId = _accountManager.Register(new RegisterDTO
+                {
+                    Email = employeeDTO.Email,
+                    Username = employeeDTO.Username,
+                    Password = employeeDTO.Password,
+                    Role = employeeDTO.Role
+                });
                 _employeeManager.Add(employeeDTO);
                 return Ok();
             }
@@ -65,10 +74,11 @@ namespace MealPlanner.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update([FromBody] EmployeeDTO employeeDTO)
+        public IActionResult Update([FromBody] UserEmployeeDTO employeeDTO)
         {
             try
             {
+                _accountManager.Update(employeeDTO);
                 _employeeManager.Update(employeeDTO);
                 return Ok();
             }
@@ -79,10 +89,11 @@ namespace MealPlanner.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(int id, string userId)
         {
             try
             {
+                _accountManager.Delete(userId);
                 _employeeManager.Delete(id);
                 return Ok();
             }

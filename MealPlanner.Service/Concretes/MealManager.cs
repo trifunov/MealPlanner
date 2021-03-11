@@ -163,7 +163,8 @@ namespace MealPlanner.Service.Concretes
                     NameForeign = meal.NameForeign,
                     ImageBase64 = meal.ImageBase64,
                     Ingredients = ingredients,
-                    Allergens = allergens
+                    Allergens = allergens,
+                    PlanId = meal.PlanId
                 });
             }
 

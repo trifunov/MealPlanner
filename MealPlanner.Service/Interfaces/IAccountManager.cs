@@ -8,7 +8,9 @@ namespace MealPlanner.Service.Interfaces
 {
     public interface IAccountManager
     {
-        void Register(RegisterDTO registerDto);
+        string Register(RegisterDTO registerDto);
+        void Update(UserEmployeeDTO employeeDto);
+        void Delete(string userId);
         JObject Login(LoginDTO loginDto);
         JObject LoginRfid(string rfid);
     }

@@ -63,5 +63,11 @@ namespace MealPlanner.Service.Concretes
 
             return companyDto;
         }
+
+        public CompanyNameDTO GetName(int id)
+        {
+            var company = _companyRepository.GetById(id);
+            return new CompanyNameDTO { Name = company.Name };
+        }
     }
 }

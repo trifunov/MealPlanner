@@ -23,10 +23,17 @@ namespace MealPlanner.Service.Concretes
             _employeeManager = employeeManager;
         }
 
-        public void Register(RegisterDTO registerDto)
+        public string Register(RegisterDTO registerDto)
         {
             var user = new ApplicationUser { Email = registerDto.Email, UserName = registerDto.Username };
             var result = _userManager.CreateAsync(user, registerDto.Password).Result;
+
+            var roleResult = false;
+            if (!string.IsNullOrEmpty(registerDto.Role))
+            {
+                roleResult = _userManager.AddToRoleAsync(user, registerDto.Role).Result.Succeeded;
+            }
+            
             if (!result.Succeeded)
             {
                 var errorMessage = "";
@@ -36,6 +43,60 @@ namespace MealPlanner.Service.Concretes
                 }
                 throw new Exception(errorMessage);
             }
+
+            return user.Id;
+        }
+
+        public void Update(UserEmployeeDTO employeeDTO)
+        {
+            var user = _userManager.FindByIdAsync(employeeDTO.UserId).Result;
+            if (user != null)
+            {
+                user.Email = employeeDTO.Email;
+                user.UserName = employeeDTO.Username;
+                var result = _userManager.UpdateAsync(user).Result;
+
+                var roleResult = false;
+                var roles = _userManager.GetRolesAsync(user).Result;
+                if (roles.Count > 0 && employeeDTO.Role != roles[0])
+                {
+                    roleResult = _userManager.RemoveFromRolesAsync(user, roles).Result.Succeeded;
+                }
+
+                if (!string.IsNullOrEmpty(employeeDTO.Role) && (roles.Count == 0 || roleResult == true))
+                {
+                    roleResult = _userManager.AddToRoleAsync(user, employeeDTO.Role).Result.Succeeded;
+                }
+
+                if (!result.Succeeded)
+                {
+                    var errorMessage = "";
+                    foreach (var error in result.Errors)
+                    {
+                        errorMessage += error.Description + "\r\n";
+                    }
+                    throw new Exception(errorMessage);
+                }
+            }
+        }
+
+        public void Delete(string userId)
+        {
+            var user = _userManager.FindByIdAsync(userId).Result;
+            if (user != null)
+            {
+                var result = _userManager.DeleteAsync(user).Result;
+
+                if (!result.Succeeded)
+                {
+                    var errorMessage = "";
+                    foreach (var error in result.Errors)
+                    {
+                        errorMessage += error.Description + "\r\n";
+                    }
+                    throw new Exception(errorMessage);
+                }
+            }
         }
 
         public JObject Login(LoginDTO loginDto)
@@ -44,13 +105,22 @@ namespace MealPlanner.Service.Concretes
             if (user != null && _userManager.CheckPasswordAsync(user, loginDto.Password).Result)
             {
                 var employee = _employeeManager.GetByUserId(user.Id);
-                var authClaims = new[]
+
+                var authClaims = new List<Claim>
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim("CompanyId", employee.CompanyId.ToString()),
                     new Claim("EmployeeId", employee.Id.ToString())
                 };
+
+                var tokenRole = "";
+                var roles = _userManager.GetRolesAsync(user);
+                foreach (var role in roles.Result)
+                {
+                    tokenRole = role;
+                    authClaims.Add(new Claim(ClaimTypes.Role, role));
+                }
 
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("BiggerSecureKeyBecauseOfSize"));
 
@@ -68,7 +138,7 @@ namespace MealPlanner.Service.Concretes
                     token = new JwtSecurityTokenHandler().WriteToken(token),
                     expiration = token.ValidTo,
                     username = user.UserName,
-                    role = "Administrator"
+                    role = tokenRole
                 });
             }
             else
@@ -86,13 +156,21 @@ namespace MealPlanner.Service.Concretes
             var user = _userManager.FindByIdAsync(employee.UserId).Result;
             if (user != null)
             {
-                var authClaims = new[]
+                var authClaims = new List<Claim>
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim("CompanyId", employee.CompanyId.ToString()),
                     new Claim("EmployeeId", employee.Id.ToString())
                 };
+
+                var tokenRole = "";
+                var roles = _userManager.GetRolesAsync(user);
+                foreach (var role in roles.Result)
+                {
+                    tokenRole = role;
+                    authClaims.Add(new Claim(ClaimTypes.Role, role));
+                }
 
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("BiggerSecureKeyBecauseOfSize"));
 
@@ -110,7 +188,7 @@ namespace MealPlanner.Service.Concretes
                     token = new JwtSecurityTokenHandler().WriteToken(token),
                     expiration = token.ValidTo,
                     username = user.UserName,
-                    role = "Administrator"
+                    role = tokenRole
                 });
             }
             else

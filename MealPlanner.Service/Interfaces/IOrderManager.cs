@@ -10,5 +10,6 @@ namespace MealPlanner.Service.Interfaces
         void Add(OrderDTO orderDto);
         void Update(OrderDTO orderDto);
         void Delete(int id);
+        int GetByDateAndShift(int employeeId, DateTime date, int shift);
     }
 }

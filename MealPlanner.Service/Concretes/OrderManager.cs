@@ -11,10 +11,12 @@ namespace MealPlanner.Service.Concretes
     public class OrderManager : IOrderManager
     {
         private readonly IOrderRepository _orderRepository;
+        private readonly IPlanRepository _planRepository;
 
-        public OrderManager(IOrderRepository orderRepository)
+        public OrderManager(IOrderRepository orderRepository, IPlanRepository planRepository)
         {
             _orderRepository = orderRepository;
+            _planRepository = planRepository;
         }
 
         public void Add(OrderDTO orderDto)
@@ -24,7 +26,8 @@ namespace MealPlanner.Service.Concretes
                 EmployeeId = orderDto.EmployeeId,
                 IsDelivered = orderDto.IsDelivered,
                 PlanId = orderDto.PlanId,
-                Shift = orderDto.Shift
+                Shift = orderDto.Shift,
+                Plan = _planRepository.GetById(orderDto.PlanId)
             };
 
             _orderRepository.Add(order);
@@ -47,6 +50,11 @@ namespace MealPlanner.Service.Concretes
         public void Delete(int id)
         {
             _orderRepository.Delete(id);
+        }
+
+        public int GetByDateAndShift(int employeeId, DateTime date, int shift)
+        {
+            return _orderRepository.GetByDateAndShift(employeeId, date, shift);
         }
     }
 }

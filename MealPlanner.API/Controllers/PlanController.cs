@@ -15,7 +15,7 @@ namespace MealPlanner.API.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,Manager")]
     public class PlanController : ControllerBase
     {
         private readonly IHttpContextAccessor _httpContextAccessor;

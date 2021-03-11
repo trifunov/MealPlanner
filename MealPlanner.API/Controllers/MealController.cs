@@ -13,7 +13,6 @@ namespace MealPlanner.API.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class MealController : ControllerBase
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -27,6 +26,7 @@ namespace MealPlanner.API.Controllers
 
         // GET: api/<controller>
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,Manager")]
         public IActionResult GetAll()
         {
             try
@@ -40,6 +40,7 @@ namespace MealPlanner.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetValid(DateTime date, int shift)
         {
             try
@@ -55,6 +56,7 @@ namespace MealPlanner.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,Manager")]
         public IActionResult Add([FromBody] MealDTO mealDto)
         {
             try
@@ -69,6 +71,7 @@ namespace MealPlanner.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,Manager")]
         public IActionResult Delete(int id)
         {
             try
