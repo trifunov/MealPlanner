@@ -10,7 +10,8 @@ namespace MealPlanner.Data.Interfaces
         void Add(Order order);
         void Update(Order order);
         void Delete(int id);
-        List<Order> GetOrdersByRfid(string rfid);
+        void Delivered(int id);
+        Order GetByRfid(string rfid, DateTime date, int shift);
         int GetByDateAndShift(int employeeId, DateTime date, int shift);
     }
 }

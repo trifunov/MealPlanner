@@ -52,9 +52,35 @@ namespace MealPlanner.Service.Concretes
             _orderRepository.Delete(id);
         }
 
+        public void Delivered(int id)
+        {
+            _orderRepository.Delivered(id);
+        }
+
         public int GetByDateAndShift(int employeeId, DateTime date, int shift)
         {
             return _orderRepository.GetByDateAndShift(employeeId, date, shift);
+        }
+
+        public OrderDeliveryDTO GetByRfid(string rfid, DateTime date, int shift)
+        {
+            var order = _orderRepository.GetByRfid(rfid, date, shift);
+
+            if (order != null)
+            {
+                return new OrderDeliveryDTO
+                {
+                    OrderId = order.Id,
+                    IsDelivered = order.IsDelivered,
+                    ImageBase64 = order.Plan.Meal.ImageBase64,
+                    Name = order.Plan.Meal.Name,
+                    NameForeign = order.Plan.Meal.NameForeign
+                };
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

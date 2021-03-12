@@ -19,7 +19,7 @@ namespace MealPlanner.Data.Concretes
 
         public void Add(Order order)
         {
-            var orderDb = _context.Orders.Include(x => x.Plan).FirstOrDefault(x => x.Plan.Date == order.Plan.Date && x.EmployeeId == order.EmployeeId && x.Shift == order.Shift);
+            var orderDb = _context.Orders.Include(x => x.Plan).FirstOrDefault(x => x.Plan.Date == order.Plan.Date && x.EmployeeId == order.EmployeeId);
 
             if (orderDb == null)
             {
@@ -29,6 +29,7 @@ namespace MealPlanner.Data.Concretes
             else
             {
                 orderDb.PlanId = order.PlanId;
+                orderDb.Shift = order.Shift;
                 _context.SaveChanges();
             }
         }
@@ -64,9 +65,9 @@ namespace MealPlanner.Data.Concretes
             }
         }
 
-        public List<Order> GetOrdersByRfid(string rfid)
+        public Order GetByRfid(string rfid, DateTime date, int shift)
         {
-            throw new NotImplementedException();
+            return _context.Orders.Include(x => x.Employee).Include(x => x.Plan).ThenInclude(x => x.Meal).FirstOrDefault(x => x.Employee.Rfid == rfid && x.Plan.Date == date && x.Shift == shift && x.IsDelivered == false);
         }
 
         public int GetByDateAndShift(int employeeId, DateTime date, int shift)
@@ -80,6 +81,21 @@ namespace MealPlanner.Data.Concretes
             else
             {
                 return 0;
+            }
+        }
+
+        public void Delivered(int id)
+        {
+            var order = _context.Orders.Find(id);
+
+            if (order != null)
+            {
+                order.IsDelivered = true;
+                _context.SaveChanges();
+            }
+            else
+            {
+                throw new Exception("Order not found");
             }
         }
     }

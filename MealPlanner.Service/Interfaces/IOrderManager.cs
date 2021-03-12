@@ -10,6 +10,8 @@ namespace MealPlanner.Service.Interfaces
         void Add(OrderDTO orderDto);
         void Update(OrderDTO orderDto);
         void Delete(int id);
+        void Delivered(int id);
         int GetByDateAndShift(int employeeId, DateTime date, int shift);
+        OrderDeliveryDTO GetByRfid(string rfid, DateTime date, int shift);
     }
 }

@@ -69,8 +69,21 @@ namespace MealPlanner.API.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult Delivered(int id)
+        {
+            try
+            {
+                _orderManager.Delivered(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetByDateAndShift(OrderSelectedDTO orderDto)
         {
             try
@@ -78,6 +91,19 @@ namespace MealPlanner.API.Controllers
                 var claimEmployeeId = _httpContextAccessor.HttpContext.User.FindFirst("EmployeeId");
                 var employeeId = (claimEmployeeId == null) ? 0 : Int32.Parse(claimEmployeeId.Value);
                 return Ok(_orderManager.GetByDateAndShift(employeeId, orderDto.Date, orderDto.Shift));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult GetByRfid(OrderRfidDTO orderDto)
+        {
+            try
+            {
+                return Ok(_orderManager.GetByRfid(orderDto.Rfid, orderDto.Date, orderDto.Shift));
             }
             catch (Exception ex)
             {
