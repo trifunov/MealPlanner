@@ -45,6 +45,7 @@ namespace MealPlanner.Data.Concretes
             if (company != null)
             {
                 company.Name = companyInput.Name;
+                company.ImageBase64 = companyInput.ImageBase64;
                 _context.SaveChanges();
             }
             else

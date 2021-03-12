@@ -13,7 +13,6 @@ namespace MealPlanner.Data.Models
         public int Id { get; set; }
         public string Rfid { get; set; }
         public string UserId { get; set; }
-        public int CompanyId { get; set; }
         public ApplicationUser User { get; set; }
         public Company Company { get; set; }
         public ICollection<Order> Orders { get; set; }

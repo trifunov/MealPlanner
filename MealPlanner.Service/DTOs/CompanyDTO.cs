@@ -9,8 +9,10 @@ namespace MealPlanner.Service.DTOs
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "User Name is required")]
+        [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
+
+        public string ImageBase64 { get; set; }
 
         public int TotalEmployees { get; set; }
     }

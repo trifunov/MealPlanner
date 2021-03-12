@@ -16,11 +16,13 @@ namespace MealPlanner.API.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     public class CompanyController : ControllerBase
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ICompanyManager _companyManager;
 
-        public CompanyController(ICompanyManager companyManager)
+        public CompanyController(ICompanyManager companyManager, IHttpContextAccessor httpContextAccessor)
         {
             _companyManager = companyManager;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         // GET: api/<controller>
@@ -98,6 +100,29 @@ namespace MealPlanner.API.Controllers
             {
                 _companyManager.Delete(id);
                 return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult GetLogo()
+        {
+            try
+            {
+                var claimCompanyId = _httpContextAccessor.HttpContext.User.FindFirst("CompanyId");
+
+                if(claimCompanyId == null)
+                {
+                    return Ok(new CompanyNameDTO { Name = "", ImageBase64 = "" });
+                }
+                else
+                {
+                    return Ok(_companyManager.GetName(Int32.Parse(claimCompanyId.Value)));
+                }
             }
             catch (Exception ex)
             {

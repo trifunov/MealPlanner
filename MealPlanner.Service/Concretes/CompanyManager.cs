@@ -21,6 +21,7 @@ namespace MealPlanner.Service.Concretes
         {
             var company = new Company();
             company.Name = companyDto.Name;
+            company.ImageBase64 = companyDto.ImageBase64;
             _companyRepository.Add(company);
         }
 
@@ -34,6 +35,7 @@ namespace MealPlanner.Service.Concretes
             var company = new Company();
             company.Id = companyDto.Id;
             company.Name = companyDto.Name;
+            company.ImageBase64 = companyDto.ImageBase64;
             _companyRepository.Update(company);
         }
 
@@ -47,6 +49,7 @@ namespace MealPlanner.Service.Concretes
                 var companyDto = new CompanyDTO();
                 companyDto.Id = company.Id;
                 companyDto.Name = company.Name;
+                companyDto.ImageBase64 = company.ImageBase64;
                 companyDto.TotalEmployees = company.Employees.Count;
                 companyDTOs.Add(companyDto);
             }
@@ -60,6 +63,7 @@ namespace MealPlanner.Service.Concretes
             var companyDto = new CompanyDTO();
             companyDto.Id = company.Id;
             companyDto.Name = company.Name;
+            companyDto.ImageBase64 = company.ImageBase64;
 
             return companyDto;
         }
@@ -67,7 +71,11 @@ namespace MealPlanner.Service.Concretes
         public CompanyNameDTO GetName(int id)
         {
             var company = _companyRepository.GetById(id);
-            return new CompanyNameDTO { Name = company.Name };
+            return new CompanyNameDTO 
+            { 
+                Name = company.Name,
+                ImageBase64 = company.ImageBase64
+            };
         }
     }
 }

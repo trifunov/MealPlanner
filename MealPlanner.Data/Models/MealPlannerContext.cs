@@ -26,8 +26,6 @@ namespace MealPlanner.Data.Models
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.ApplyConfiguration(new RoleConfiguration());
-
             modelBuilder.Entity<ApplicationUser>()
             .HasOne(a => a.Employee)
             .WithOne(e => e.User)

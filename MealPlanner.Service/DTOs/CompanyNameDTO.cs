@@ -7,5 +7,6 @@ namespace MealPlanner.Service.DTOs
     public class CompanyNameDTO
     {
         public string Name { get; set; }
+        public string ImageBase64 { get; set; }
     }
 }

@@ -24,7 +24,7 @@ namespace MealPlanner.Service.Concretes
             var employee = new Employee();
             employee.Rfid = employeeDto.Rfid;
             employee.UserId = employeeDto.UserId;
-            employee.CompanyId = employeeDto.CompanyId;
+            employee.Company = _companyRepository.GetById(employeeDto.CompanyId);
             _employeeRepository.Add(employee);
         }
 
