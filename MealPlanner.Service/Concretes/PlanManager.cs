@@ -93,5 +93,24 @@ namespace MealPlanner.Service.Concretes
 
             return planDto;
         }
+
+        public List<ReportResponseDTO> GetReports(ReportRequestDTO requestDto)
+        {
+            var reports = _planRepository.GetReports(requestDto.CompanyId, requestDto.FromDate, requestDto.ToDate);
+            var response = new List<ReportResponseDTO>();
+
+            foreach(var report in reports)
+            {
+                response.Add(new ReportResponseDTO
+                {
+                    Date = report.Date,
+                    MealName = report.MealName,
+                    Shift = PlanHelper.GetShiftName(report.Shift),
+                    TotalOrders = report.TotalOrders
+                });
+            }
+
+            return response;
+        }
     }
 }

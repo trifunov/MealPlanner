@@ -36,7 +36,12 @@ namespace MealPlanner.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddDbContext<MealPlannerContext>(opts => opts.UseSqlServer(Configuration.GetConnectionString("MealPlannerDatabase")));
             services.AddIdentity<ApplicationUser, IdentityRole>(opt =>
@@ -99,15 +104,7 @@ namespace MealPlanner.API
                 app.UseHsts();
             }
 
-            string[] origins = new string[] 
-            { 
-                "http://localhost:4200", 
-                "http://mealplannerui.azurewebsites.net", 
-                "https://dalma.solutionforit.org/",
-                "http://dalma.solutionforit.org/",
-                "http://dom.dalma.com.mk/"
-            };
-            app.UseCors(b => b.AllowAnyMethod().AllowAnyHeader().WithOrigins(origins));
+            app.UseCors("MyPolicy");
             app.UseMvc();
             app.UseHttpsRedirection();
             app.UseAuthentication();

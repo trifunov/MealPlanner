@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MealPlanner.Data.Models
 {
-    public class GroupedPlan
+    public class PlanGrouped
     {
         public List<int> Ids { get; set; }
         public string Shifts { get; set; }

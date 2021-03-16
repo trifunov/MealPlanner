@@ -31,6 +31,11 @@ namespace MealPlanner.Service.Helpers
             return result;
         }
 
+        public static string GetShiftName(int shift)
+        {
+            return ((ShiftEnum)shift).GetDescription();
+        }
+
         public static string GetDescription(this Enum value)
         {
             var enumMember = value.GetType().GetMember(value.ToString()).FirstOrDefault();

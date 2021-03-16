@@ -43,7 +43,7 @@ namespace MealPlanner.Data.Concretes
             return _context.Plans.Where(x => x.CompanyId == companyId && DateTime.Now > x.Date).ToList();
         }
 
-        public List<GroupedPlan> GetByCompanyIdGrouped(int companyId)
+        public List<PlanGrouped> GetByCompanyIdGrouped(int companyId)
         {
             return _context.Plans.Where(x => x.CompanyId == companyId).GroupBy(p => new 
             { 
@@ -52,7 +52,7 @@ namespace MealPlanner.Data.Concretes
                 p.Date,
                 p.EditableFrom,
                 p.EditableTo
-            }).Select(g => new GroupedPlan
+            }).Select(g => new PlanGrouped
             { 
                 Ids = g.Select(x => x.Id).ToList(),
                 CompanyId = g.Key.CompanyId,
@@ -70,7 +70,7 @@ namespace MealPlanner.Data.Concretes
             return _context.Plans.Find(id);
         }
 
-        public GroupedPlan GetByIds(List<int> ids)
+        public PlanGrouped GetByIds(List<int> ids)
         {
             return _context.Plans.Where(x => ids.Contains(x.Id)).GroupBy(p => new
             {
@@ -79,7 +79,7 @@ namespace MealPlanner.Data.Concretes
                 p.Date,
                 p.EditableFrom,
                 p.EditableTo
-            }).Select(g => new GroupedPlan
+            }).Select(g => new PlanGrouped
             {
                 Ids = g.Select(x => x.Id).ToList(),
                 CompanyId = g.Key.CompanyId,
@@ -89,6 +89,30 @@ namespace MealPlanner.Data.Concretes
                 EditableTo = g.Key.EditableTo,
                 MealIds = g.Select(x => x.MealId).ToList()
             }).FirstOrDefault();
+        }
+
+        public List<PlanReport> GetReports(int companyId, DateTime fromDate, DateTime toDate)
+        {
+            var plans = _context.Plans.Include(x => x.Orders).Include(x => x.Meal).Where(x => x.CompanyId == companyId && x.Date >= fromDate && x.Date <= toDate);
+            var orders = _context.Orders;
+
+            return (from plan in plans
+                        join order in orders on plan.Id equals order.PlanId
+                        group plan by new 
+                        { 
+                            plan.Date, 
+                            plan.CompanyId,
+                            order.Shift,
+                            plan.MealId,
+                            plan.Meal.Name
+                        } into grouped
+                        select new PlanReport
+                        { 
+                            Date = grouped.Key.Date, 
+                            Shift = grouped.Key.Shift,
+                            MealName = grouped.Key.Name,
+                            TotalOrders = grouped.Count()
+                        }).ToList();
         }
     }
 }

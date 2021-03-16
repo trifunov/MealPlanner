@@ -84,5 +84,18 @@ namespace MealPlanner.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost]
+        public IActionResult GetReports([FromBody] ReportRequestDTO planDto)
+        {
+            try
+            {
+                return Ok(_planManager.GetReports(planDto));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
