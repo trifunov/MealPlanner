@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MealPlanner.API.Controllers
@@ -31,8 +32,50 @@ namespace MealPlanner.API.Controllers
             try
             {
                 var claimEmployeeId = _httpContextAccessor.HttpContext.User.FindFirst("EmployeeId");
-                orderDto.EmployeeId = (claimEmployeeId == null) ? 0 : Int32.Parse(claimEmployeeId.Value);
-                _orderManager.Add(orderDto);
+                orderDto.EmployeeId = (claimEmployeeId == null) ? 0 : Int32.Parse(claimEmployeeId.Value);               
+                return Ok(_orderManager.Add(orderDto));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult AddFromList([FromBody] OrderDTO orderDto)
+        {
+            try
+            {
+                var claimRole = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role);
+                if (claimRole == null || claimRole.Value != "HR")
+                {
+                    var claimEmployeeId = _httpContextAccessor.HttpContext.User.FindFirst("EmployeeId");
+                    var employeeId = (claimEmployeeId == null) ? 0 : Int32.Parse(claimEmployeeId.Value);
+                    orderDto.EmployeeId = employeeId;
+                }
+
+                return Ok(_orderManager.Add(orderDto));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult EditFromList([FromBody] OrderForEditDTO orderDto)
+        {
+            try
+            {
+                var claimRole = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role);
+                if (claimRole == null || claimRole.Value != "HR")
+                {
+                    var claimEmployeeId = _httpContextAccessor.HttpContext.User.FindFirst("EmployeeId");
+                    var employeeId = (claimEmployeeId == null) ? 0 : Int32.Parse(claimEmployeeId.Value);
+                    orderDto.EmployeeId =  employeeId;
+                }
+
+                _orderManager.EditFromList(orderDto);
                 return Ok();
             }
             catch (Exception ex)
@@ -98,12 +141,46 @@ namespace MealPlanner.API.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult GetById(int id)
+        {
+            try
+            {
+                return Ok(_orderManager.GetById(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost]
         public IActionResult GetByRfid(OrderRfidDTO orderDto)
         {
             try
             {
                 return Ok(_orderManager.GetByRfid(orderDto.Rfid, orderDto.Date, orderDto.Shift));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult GetFiltered(OrderFilteredRequestDTO orderDto)
+        {
+            try
+            {
+                var claimRole = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role);
+                if (claimRole == null || claimRole.Value != "HR")
+                {
+                    var claimEmployeeId = _httpContextAccessor.HttpContext.User.FindFirst("EmployeeId");
+                    var employeeId = (claimEmployeeId == null) ? 0 : Int32.Parse(claimEmployeeId.Value);
+                    orderDto.EmployeeIds = new List<int> { employeeId };
+                }
+
+                return Ok(_orderManager.GetFiltered(orderDto));
             }
             catch (Exception ex)
             {

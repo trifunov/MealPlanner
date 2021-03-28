@@ -19,19 +19,13 @@ namespace MealPlanner.Data.Concretes
 
         public void Add(Order order)
         {
-            var orderDb = _context.Orders.Include(x => x.Plan).FirstOrDefault(x => x.Plan.Date == order.Plan.Date && x.EmployeeId == order.EmployeeId);
+            _context.Orders.Add(order);
+            _context.SaveChanges();
+        }
 
-            if (orderDb == null)
-            {
-                _context.Orders.Add(order);
-                _context.SaveChanges();
-            }
-            else
-            {
-                orderDb.PlanId = order.PlanId;
-                orderDb.Shift = order.Shift;
-                _context.SaveChanges();
-            }
+        public Order GetByDateAndEmployee(Order order)
+        {
+           return _context.Orders.Include(x => x.Plan).FirstOrDefault(x => x.Plan.Date == order.Plan.Date && x.EmployeeId == order.EmployeeId);
         }
 
         public void Delete(int id)
@@ -56,8 +50,23 @@ namespace MealPlanner.Data.Concretes
             if (order != null)
             {
                 order.PlanId = orderInput.PlanId;
+                order.Shift = orderInput.Shift;
                 order.IsDelivered = orderInput.IsDelivered;
                 _context.SaveChanges();
+            }
+            else
+            {
+                throw new Exception("Order not found");
+            }
+        }
+
+        public Order GetById(int id)
+        {
+            var order = _context.Orders.Include(x => x.Plan).ThenInclude(x => x.Meal).FirstOrDefault(x => x.Id == id);
+
+            if (order != null)
+            {
+                return order;
             }
             else
             {
@@ -97,6 +106,12 @@ namespace MealPlanner.Data.Concretes
             {
                 throw new Exception("Order not found");
             }
+        }
+
+        public List<Order> GetFiltered(List<int> employeeIds, DateTime fromDate, DateTime toDate)
+        {
+            toDate = toDate.AddHours(23).AddMinutes(59).AddSeconds(59);
+            return _context.Orders.Include(x => x.Employee).ThenInclude(x => x.User).Include(x => x.Plan).ThenInclude(x => x.Meal).Where(x => employeeIds.Contains(x.Employee.Id) && x.Plan.Date > fromDate && x.Plan.Date < toDate).OrderByDescending(x => x.Plan.Date).ToList();
         }
     }
 }

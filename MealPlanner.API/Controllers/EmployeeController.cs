@@ -7,20 +7,23 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MealPlanner.API.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,HR")]
     public class EmployeeController : ControllerBase
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IEmployeeManager _employeeManager;
         private readonly IAccountManager _accountManager;
 
-        public EmployeeController(IEmployeeManager employeeManager, IAccountManager accountManager)
+        public EmployeeController(IHttpContextAccessor httpContextAccessor, IEmployeeManager employeeManager, IAccountManager accountManager)
         {
+            _httpContextAccessor = httpContextAccessor;
             _employeeManager = employeeManager;
             _accountManager = accountManager;
         }
@@ -108,6 +111,37 @@ namespace MealPlanner.API.Controllers
         {
             try
             {
+                var claimRole = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role);
+                if (claimRole != null && claimRole.Value == "HR")
+                {
+                    var claimCompanyId = _httpContextAccessor.HttpContext.User.FindFirst("CompanyId");
+                    if (claimCompanyId != null)
+                    {
+                        companyId = Int32.Parse(claimCompanyId.Value);
+                    }
+                }
+
+                return Ok(_employeeManager.GetByCompanyId(companyId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult GetByCompanyIdFromToken()
+        {
+            try
+            {
+                var companyId = 0;
+                var claimCompanyId = _httpContextAccessor.HttpContext.User.FindFirst("CompanyId");
+                if (claimCompanyId != null)
+                {
+                    companyId = Int32.Parse(claimCompanyId.Value);
+                }
+
                 return Ok(_employeeManager.GetByCompanyId(companyId));
             }
             catch (Exception ex)

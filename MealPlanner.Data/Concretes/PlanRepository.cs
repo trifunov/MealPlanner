@@ -62,7 +62,7 @@ namespace MealPlanner.Data.Concretes
                 EditableTo = g.Key.EditableTo,
                 MealIds = g.Select(x => x.MealId).ToList(),
                 TotalMeals = g.Count() 
-            }).ToList();
+            }).OrderByDescending(x => x.Date).ToList();
         }
 
         public Plan GetById(int id)

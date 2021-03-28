@@ -26,6 +26,8 @@ namespace MealPlanner.Data.Models
         {
             base.OnModelCreating(modelBuilder);
 
+            //modelBuilder.ApplyConfiguration(new RoleConfiguration());
+
             modelBuilder.Entity<ApplicationUser>()
             .HasOne(a => a.Employee)
             .WithOne(e => e.User)
@@ -65,6 +67,10 @@ namespace MealPlanner.Data.Models
 
             modelBuilder.Entity<Meal>()
                 .HasIndex(u => u.Name)
+                .IsUnique();
+
+            modelBuilder.Entity<Employee>()
+                .HasIndex(u => u.Rfid)
                 .IsUnique();
 
             modelBuilder.Entity<Employee>()

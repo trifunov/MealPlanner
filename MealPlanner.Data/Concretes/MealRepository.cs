@@ -62,7 +62,7 @@ namespace MealPlanner.Data.Concretes
                           NameForeign = meal.NameForeign,
                           MealAllergens = meal.MealAllergens,
                           MealIngredients = meal.MealIngredients,
-                          PlanId = meal.Plans.First(x => x.Date == date).Id
+                          PlanId = meal.Plans.First(x => x.CompanyId == companyId && x.Shifts.Contains(shift.ToString()) && date == x.Date).Id
                       });
 
             return result.ToList();

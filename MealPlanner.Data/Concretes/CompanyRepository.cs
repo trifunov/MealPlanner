@@ -68,9 +68,16 @@ namespace MealPlanner.Data.Concretes
             }
         }
 
-        public List<Company> GetAll()
+        public List<Company> GetAll(int companyId)
         {
-            return _context.Companies.Include(x => x.Employees).ToList();
+            if(companyId == 0)
+            {
+                return _context.Companies.Include(x => x.Employees).ToList();
+            }
+            else
+            {
+                return _context.Companies.Where(x => x.Id == companyId).Include(x => x.Employees).ToList();
+            }
         }
     }
 }

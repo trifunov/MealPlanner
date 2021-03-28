@@ -11,6 +11,6 @@ namespace MealPlanner.Data.Interfaces
         void Delete(int id);
         void Update(Company company);
         Company GetById(int id);
-        List<Company> GetAll();
+        List<Company> GetAll(int companyId);
     }
 }

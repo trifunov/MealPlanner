@@ -11,7 +11,10 @@ namespace MealPlanner.Data.Interfaces
         void Update(Order order);
         void Delete(int id);
         void Delivered(int id);
+        Order GetById(int id);
         Order GetByRfid(string rfid, DateTime date, int shift);
         int GetByDateAndShift(int employeeId, DateTime date, int shift);
+        Order GetByDateAndEmployee(Order order);
+        List<Order> GetFiltered(List<int> employeeIds, DateTime fromDate, DateTime toDate);
     }
 }

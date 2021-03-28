@@ -39,10 +39,10 @@ namespace MealPlanner.Service.Concretes
             _companyRepository.Update(company);
         }
 
-        public List<CompanyDTO> GetAll()
+        public List<CompanyDTO> GetAll(int companyId)
         {
             var companyDTOs = new List<CompanyDTO>();
-            var companies = _companyRepository.GetAll();
+            var companies = _companyRepository.GetAll(companyId);
 
             foreach (var company in companies)
             {

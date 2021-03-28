@@ -4,14 +4,16 @@ using MealPlanner.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MealPlanner.Data.Migrations
 {
     [DbContext(typeof(MealPlannerContext))]
-    partial class MealPlannerContextModelSnapshot : ModelSnapshot
+    [Migration("20210320154245_AddedHRRole")]
+    partial class AddedHRRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -119,10 +121,6 @@ namespace MealPlanner.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
-
-                    b.HasIndex("Rfid")
-                        .IsUnique()
-                        .HasFilter("[Rfid] IS NOT NULL");
 
                     b.HasIndex("UserId")
                         .IsUnique()
@@ -271,6 +269,13 @@ namespace MealPlanner.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new { Id = "e13f6db0-58f0-4bf8-9053-f33f8cba8cdf", ConcurrencyStamp = "149568d0-8848-4c9a-a275-9d29eb50eaae", Name = "Manager", NormalizedName = "MANAGER" },
+                        new { Id = "a7261f15-b1c6-4e44-822e-15e400f85ef3", ConcurrencyStamp = "c7c54efd-17b6-49ae-b362-df8efc1ce82b", Name = "Administrator", NormalizedName = "ADMINISTRATOR" },
+                        new { Id = "a03d0ccd-d990-4321-bb49-438b39cf5014", ConcurrencyStamp = "828e53d2-23b2-47d3-ad24-c9baf99adb96", Name = "Chef", NormalizedName = "CHEF" },
+                        new { Id = "774875ed-bf64-4b35-8642-fb437da157a6", ConcurrencyStamp = "120ddc3f-5d0b-4085-b84b-6f67c7aa1c2b", Name = "HR", NormalizedName = "HR" }
+                    );
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -7,13 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MealPlanner.API.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,HR")]
     public class CompanyController : ControllerBase
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -31,7 +32,18 @@ namespace MealPlanner.API.Controllers
         {
             try
             {
-                return Ok(_companyManager.GetAll());
+                var companyId = 0;
+                var claimRole = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role);
+                if (claimRole != null && claimRole.Value == "HR")
+                {
+                    var claimCompanyId = _httpContextAccessor.HttpContext.User.FindFirst("CompanyId");
+                    if (claimCompanyId != null)
+                    {
+                        companyId = Int32.Parse(claimCompanyId.Value);
+                    }
+                }
+
+                return Ok(_companyManager.GetAll(companyId));
             }
             catch (Exception ex)
             {
