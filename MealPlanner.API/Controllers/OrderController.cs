@@ -31,9 +31,10 @@ namespace MealPlanner.API.Controllers
         {
             try
             {
+                var claimRole = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role);
                 var claimEmployeeId = _httpContextAccessor.HttpContext.User.FindFirst("EmployeeId");
                 orderDto.EmployeeId = (claimEmployeeId == null) ? 0 : Int32.Parse(claimEmployeeId.Value);               
-                return Ok(_orderManager.Add(orderDto));
+                return Ok(_orderManager.Add(orderDto, claimRole.Value));
             }
             catch (Exception ex)
             {
@@ -54,7 +55,7 @@ namespace MealPlanner.API.Controllers
                     orderDto.EmployeeId = employeeId;
                 }
 
-                return Ok(_orderManager.Add(orderDto));
+                return Ok(_orderManager.Add(orderDto, claimRole.Value));
             }
             catch (Exception ex)
             {
@@ -75,7 +76,7 @@ namespace MealPlanner.API.Controllers
                     orderDto.EmployeeId =  employeeId;
                 }
 
-                _orderManager.EditFromList(orderDto);
+                _orderManager.EditFromList(orderDto, claimRole.Value);
                 return Ok();
             }
             catch (Exception ex)
@@ -103,7 +104,8 @@ namespace MealPlanner.API.Controllers
         {
             try
             {
-                _orderManager.Delete(id);
+                var claimRole = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role);
+                _orderManager.Delete(id, claimRole.Value);
                 return Ok();
             }
             catch (Exception ex)

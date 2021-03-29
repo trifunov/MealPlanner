@@ -13,6 +13,7 @@ namespace MealPlanner.Data.Interfaces
         List<PlanGrouped> GetByCompanyIdGrouped(int companyId);
         PlanGrouped GetByIds(List<int> ids);
         Plan GetById(int id);
+        Plan GetByOrderId(int orderId);
         List<PlanReport> GetReports(int companyId, DateTime fromDate, DateTime toDate);
     }
 }

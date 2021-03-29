@@ -67,7 +67,15 @@ namespace MealPlanner.Data.Concretes
 
         public Plan GetById(int id)
         {
-            return _context.Plans.Find(id);
+            return _context.Plans.Include(x => x.Meal).FirstOrDefault(x => x.Id == id);
+        }
+
+        public Plan GetByOrderId(int orderId)
+        {
+            return (from plan in _context.Plans
+                    join order in _context.Orders on plan.Id equals order.PlanId
+                    where order.Id == orderId
+                    select plan).FirstOrDefault();
         }
 
         public PlanGrouped GetByIds(List<int> ids)

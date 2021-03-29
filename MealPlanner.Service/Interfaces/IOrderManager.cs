@@ -7,10 +7,10 @@ namespace MealPlanner.Service.Interfaces
 {
     public interface IOrderManager
     {
-        OrderAddResponseDTO Add(OrderDTO orderDto);
-        void EditFromList(OrderForEditDTO orderDto);
+        OrderAddResponseDTO Add(OrderDTO orderDto, string role);
+        void EditFromList(OrderForEditDTO orderDto, string role);
         void Update(OrderDTO orderDto);
-        void Delete(int id);
+        OrderAddResponseDTO Delete(int id, string role);
         void Delivered(int id);
         int GetByDateAndShift(int employeeId, DateTime date, int shift);
         OrderForEditDTO GetById(int id);

@@ -64,6 +64,7 @@ namespace MealPlanner.API
             services.AddScoped<IPlanRepository, PlanRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<ICompanyManager, CompanyManager>();
+            services.AddScoped<IEmailManager, EmailManager>();
             services.AddScoped<IAccountManager, AccountManager>();
             services.AddScoped<IMealManager, MealManager>();
             services.AddScoped<IIngredientManager, IngredientManager>();

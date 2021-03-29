@@ -13,14 +13,18 @@ namespace MealPlanner.Service.Concretes
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IPlanRepository _planRepository;
+        private readonly IEmailManager _emailManager;
+        private readonly IEmployeeRepository _employeeRepository;
 
-        public OrderManager(IOrderRepository orderRepository, IPlanRepository planRepository)
+        public OrderManager(IOrderRepository orderRepository, IPlanRepository planRepository, IEmailManager emailManager, IEmployeeRepository employeeRepository)
         {
             _orderRepository = orderRepository;
             _planRepository = planRepository;
+            _emailManager = emailManager;
+            _employeeRepository = employeeRepository;
         }
 
-        public OrderAddResponseDTO Add(OrderDTO orderDto)
+        public OrderAddResponseDTO Add(OrderDTO orderDto, string role)
         {
             var order = new Order
             { 
@@ -31,7 +35,7 @@ namespace MealPlanner.Service.Concretes
                 Plan = _planRepository.GetById(orderDto.PlanId)
             };
 
-            if (DateTime.Now > order.Plan.EditableFrom && DateTime.Now <= order.Plan.EditableTo.AddHours(23).AddMinutes(59).AddSeconds(59))
+            if ((DateTime.Now > order.Plan.EditableFrom && DateTime.Now <= order.Plan.EditableTo.AddHours(23).AddMinutes(59).AddSeconds(59)))
             {
                 var orderDb = _orderRepository.GetByDateAndEmployee(order);
                 if (orderDb == null)
@@ -56,13 +60,37 @@ namespace MealPlanner.Service.Concretes
                     }
                 }
             }
+            else if(role == "HR")
+            {
+                var orderDb = _orderRepository.GetByDateAndEmployee(order);
+                var employee = _employeeRepository.GetById(order.EmployeeId);
+
+                if (orderDb == null)
+                {
+                    _orderRepository.Add(order);
+                    var emailBody = _emailManager.PrepareAddEmail(employee.Rfid, order.Plan.Date, order.Plan.Meal.Name);
+                    _emailManager.SendEmail("Додаден оброк", emailBody, employee.User.Email);
+                }
+                else
+                {
+                    order.Id = orderDb.Id;
+                    var oldMeal = orderDb.Plan.Meal.Name;
+
+                    _orderRepository.Update(order);
+                    var emailBody = _emailManager.PrepareEditEmail(employee.Rfid, order.Plan.Date, oldMeal, order.Plan.Meal.Name);
+                    _emailManager.SendEmail("Променет оброк", emailBody, employee.User.Email);
+                }
+
+                
+                return new OrderAddResponseDTO { Message = "Променет оброк надвор од периодот за промени" };
+            }
             else
             {
                 throw new Exception("Моментално сте надвор од периодот за избирање на овој оброк");
             }
         }
 
-        public void EditFromList(OrderForEditDTO orderDto)
+        public void EditFromList(OrderForEditDTO orderDto, string role)
         {
             var order = new Order
             {
@@ -74,7 +102,23 @@ namespace MealPlanner.Service.Concretes
                 Plan = _planRepository.GetById(orderDto.PlanId)
             };
 
-            _orderRepository.Update(order);
+            if (DateTime.Now > order.Plan.EditableFrom && DateTime.Now <= order.Plan.EditableTo.AddHours(23).AddMinutes(59).AddSeconds(59))
+            {
+                _orderRepository.Update(order);
+            }
+            else if(role == "HR")
+            {
+                var employee = _employeeRepository.GetById(order.EmployeeId);
+                var oldMeal = _orderRepository.GetById(order.Id).Plan.Meal.Name;
+
+                _orderRepository.Update(order);
+                var emailBody = _emailManager.PrepareEditEmail(employee.Rfid, order.Plan.Date, oldMeal, order.Plan.Meal.Name);
+                _emailManager.SendEmail("Променет оброк", emailBody, employee.User.Email);
+            }
+            else
+            {
+                throw new Exception("Моментално сте надвор од периодот за избирање на овој оброк");
+            }
         }
 
         public void Update(OrderDTO orderDto)
@@ -91,9 +135,27 @@ namespace MealPlanner.Service.Concretes
             _orderRepository.Add(order);
         }
 
-        public void Delete(int id)
+        public OrderAddResponseDTO Delete(int id, string role)
         {
-            _orderRepository.Delete(id);
+            var order = _orderRepository.GetById(id);
+            var employee = _employeeRepository.GetById(order.EmployeeId);
+
+            if (DateTime.Now > order.Plan.EditableFrom && DateTime.Now <= order.Plan.EditableTo.AddHours(23).AddMinutes(59).AddSeconds(59))
+            {
+                _orderRepository.Delete(id);
+                return new OrderAddResponseDTO { Message = "" };
+            }
+            else if(role == "HR")
+            {
+                _orderRepository.Delete(id);
+                var emailBody = _emailManager.PrepareDeleteEmail(employee.Rfid, order.Plan.Date);
+                _emailManager.SendEmail("Откажан оброк", emailBody, employee.User.Email);
+                return new OrderAddResponseDTO { Message = "Променет оброк надвор од периодот за промени" };
+            }
+            else
+            {
+                throw new Exception("Моментално сте надвор од периодот за избирање на овој оброк");
+            }
         }
 
         public void Delivered(int id)
@@ -117,7 +179,8 @@ namespace MealPlanner.Service.Concretes
                     OrderId = order.Id,
                     Date = order.Plan.Date,
                     Shift = order.Shift,
-                    PlanId = order.Plan.Id
+                    PlanId = order.Plan.Id,
+                    EmployeeId = order.EmployeeId
                 };
             }
             else
