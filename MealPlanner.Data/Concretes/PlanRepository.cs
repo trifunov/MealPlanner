@@ -122,5 +122,35 @@ namespace MealPlanner.Data.Concretes
                             TotalOrders = grouped.Count()
                         }).ToList();
         }
+
+        public List<PlanReport> GetDetailedReports(int companyId, DateTime fromDate, DateTime toDate, int shift, int delivered)
+        {
+            var plans = _context.Plans.Include(x => x.Orders).Include(x => x.Meal).Where(x => x.CompanyId == companyId && x.Date >= fromDate && x.Date <= toDate);
+            var orders = _context.Orders.AsQueryable();
+
+            if (shift > -1)
+            {
+                orders = orders.Where(x => x.Shift == shift);
+            }
+
+            if(delivered == 0)
+            {
+                orders = orders.Where(x => x.IsDelivered == false);
+            }
+            else if(delivered == 1)
+            {
+                orders = orders.Where(x => x.IsDelivered == true);
+            }
+
+            return (from plan in plans
+                    join order in orders on plan.Id equals order.PlanId
+                    select new PlanReport
+                    {
+                        Date = plan.Date,
+                        Shift = order.Shift,
+                        MealName = plan.Meal.Name,
+                        IsDelivered = order.IsDelivered
+                    }).ToList();
+        }
     }
 }

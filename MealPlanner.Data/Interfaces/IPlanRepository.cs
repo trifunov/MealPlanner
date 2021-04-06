@@ -15,5 +15,6 @@ namespace MealPlanner.Data.Interfaces
         Plan GetById(int id);
         Plan GetByOrderId(int orderId);
         List<PlanReport> GetReports(int companyId, DateTime fromDate, DateTime toDate);
+        List<PlanReport> GetDetailedReports(int companyId, DateTime fromDate, DateTime toDate, int shift, int delivered);
     }
 }

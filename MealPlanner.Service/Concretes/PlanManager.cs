@@ -5,6 +5,7 @@ using MealPlanner.Service.Helpers;
 using MealPlanner.Service.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace MealPlanner.Service.Concretes
@@ -107,6 +108,25 @@ namespace MealPlanner.Service.Concretes
                     MealName = report.MealName,
                     Shift = PlanHelper.GetShiftName(report.Shift),
                     TotalOrders = report.TotalOrders
+                });
+            }
+
+            return response;
+        }
+
+        public List<ReportDetailedResponseDTO> GetDetailedReports(ReportDetailedRequestDTO requestDto)
+        {
+            var reports = _planRepository.GetDetailedReports(requestDto.CompanyId, requestDto.FromDate, requestDto.ToDate, requestDto.Shift, requestDto.Delivered);
+            var response = new List<ReportDetailedResponseDTO>();
+
+            foreach (var report in reports)
+            {
+                response.Add(new ReportDetailedResponseDTO
+                {
+                    Date = report.Date,
+                    MealName = report.MealName,
+                    Shift = PlanHelper.GetShiftName(report.Shift),
+                    IsDelivered = report.IsDelivered
                 });
             }
 

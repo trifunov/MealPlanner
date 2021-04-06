@@ -13,5 +13,6 @@ namespace MealPlanner.Service.Interfaces
         PlanDTO GetByIds(List<int> ids);
         void Delete(List<int> ids);
         List<ReportResponseDTO> GetReports(ReportRequestDTO requestDto);
+        List<ReportDetailedResponseDTO> GetDetailedReports(ReportDetailedRequestDTO requestDto);
     }
 }

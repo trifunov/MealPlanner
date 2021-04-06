@@ -86,11 +86,42 @@ namespace MealPlanner.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,Manager,HR")]
         public IActionResult GetReports([FromBody] ReportRequestDTO planDto)
         {
             try
             {
+                var claimRole = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role);
+                if (claimRole == null || claimRole.Value != "Administrator")
+                {
+                    var claimCompanyId = _httpContextAccessor.HttpContext.User.FindFirst("CompanyId");
+                    var companyId = (claimCompanyId == null) ? 0 : Int32.Parse(claimCompanyId.Value);
+                    planDto.CompanyId = companyId;
+                }
+
                 return Ok(_planManager.GetReports(planDto));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,Manager,HR")]
+        public IActionResult GetDetailedReports([FromBody] ReportDetailedRequestDTO planDto)
+        {
+            try
+            {
+                var claimRole = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role);
+                if (claimRole == null || claimRole.Value != "Administrator")
+                {
+                    var claimCompanyId = _httpContextAccessor.HttpContext.User.FindFirst("CompanyId");
+                    var companyId = (claimCompanyId == null) ? 0 : Int32.Parse(claimCompanyId.Value);
+                    planDto.CompanyId = companyId;
+                }
+
+                return Ok(_planManager.GetDetailedReports(planDto));
             }
             catch (Exception ex)
             {
