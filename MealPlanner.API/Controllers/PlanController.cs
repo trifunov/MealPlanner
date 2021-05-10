@@ -15,7 +15,6 @@ namespace MealPlanner.API.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,Manager")]
     public class PlanController : ControllerBase
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -28,6 +27,7 @@ namespace MealPlanner.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,Manager")]
         public IActionResult Add([FromBody] PlanDTO planDto)
         {
             try
@@ -44,6 +44,7 @@ namespace MealPlanner.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,Manager")]
         public IActionResult GetByCompanyId()
         {
             try
@@ -59,6 +60,7 @@ namespace MealPlanner.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,Manager")]
         public IActionResult Delete([FromBody] List<int> ids)
         {
             try
@@ -73,6 +75,7 @@ namespace MealPlanner.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,Manager")]
         public IActionResult GetByIds([FromBody] List<int> ids)
         {
             try
