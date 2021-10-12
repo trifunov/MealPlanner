@@ -15,6 +15,5 @@ namespace MealPlanner.Service.DTOs
         public int CompanyId { get; set; }
         public List<int> MealIds { get; set; }
         public List<MealDTO> Meals { get; set; }
-        public int TotalMeals { get; set; }
     }
 }

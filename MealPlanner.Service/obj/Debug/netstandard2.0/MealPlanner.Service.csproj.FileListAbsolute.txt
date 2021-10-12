@@ -8,5 +8,6 @@ C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Service\obj\Debug\netstandard
 C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Service\obj\Debug\netstandard2.0\MealPlanner.Service.pdb
 C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Service\bin\Debug\netstandard2.0\MealPlanner.Data.dll
 C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Service\bin\Debug\netstandard2.0\MealPlanner.Data.pdb
-C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Service\obj\Debug\netstandard2.0\MealPlanner.Service.csprojAssemblyReference.cache
 C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Service\obj\Debug\netstandard2.0\MealPlanner.Service.csproj.CopyComplete
+C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Service\obj\Debug\netstandard2.0\MealPlanner.Service.csproj.AssemblyReference.cache
+C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Service\obj\Debug\netstandard2.0\MealPlanner.Service.GeneratedMSBuildEditorConfig.editorconfig

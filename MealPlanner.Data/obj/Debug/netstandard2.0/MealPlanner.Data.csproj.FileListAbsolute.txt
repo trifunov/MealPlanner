@@ -6,4 +6,5 @@ C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Data\obj\Debug\netstandard2.0
 C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Data\obj\Debug\netstandard2.0\MealPlanner.Data.csproj.CoreCompileInputs.cache
 C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Data\obj\Debug\netstandard2.0\MealPlanner.Data.dll
 C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Data\obj\Debug\netstandard2.0\MealPlanner.Data.pdb
-C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Data\obj\Debug\netstandard2.0\MealPlanner.Data.csprojAssemblyReference.cache
+C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Data\obj\Debug\netstandard2.0\MealPlanner.Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Data\obj\Debug\netstandard2.0\MealPlanner.Data.csproj.AssemblyReference.cache

@@ -11,7 +11,7 @@ namespace MealPlanner.Service.Interfaces
         void Delete(int id);
         void Update(MealDTO mealDto);
         MealDTO GetById(int id);
-        List<MealDTO> GetAll();
+        MealPaginationDTO GetAll(int page, int itemsPerPage);
         List<MealDTO> GetValid(int companyId, int shift, DateTime date);
     }
 }

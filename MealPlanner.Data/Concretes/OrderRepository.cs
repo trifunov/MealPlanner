@@ -76,7 +76,7 @@ namespace MealPlanner.Data.Concretes
 
         public Order GetByRfid(string rfid, DateTime date, int shift)
         {
-            return _context.Orders.Include(x => x.Employee).Include(x => x.Plan).ThenInclude(x => x.Meal).FirstOrDefault(x => x.Employee.Rfid == rfid && x.Plan.Date == date && x.Shift == shift && x.IsDelivered == false);
+            return _context.Orders.Include(x => x.Employee).Include(x => x.Plan).ThenInclude(x => x.Meal).ThenInclude(x => x.MealImage).FirstOrDefault(x => x.Employee.Rfid == rfid && x.Plan.Date == date && x.Shift == shift && x.IsDelivered == false);
         }
 
         public int GetByDateAndShift(int employeeId, DateTime date, int shift)

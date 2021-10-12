@@ -14,7 +14,6 @@ namespace MealPlanner.API.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,HR")]
     public class EmployeeController : ControllerBase
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -43,6 +42,7 @@ namespace MealPlanner.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,HR")]
         public IActionResult GetById(int id)
         {
             try
@@ -56,6 +56,7 @@ namespace MealPlanner.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,HR")]
         public IActionResult Add([FromBody] UserEmployeeDTO employeeDTO)
         {
             try
@@ -77,6 +78,7 @@ namespace MealPlanner.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,HR")]
         public IActionResult Update([FromBody] UserEmployeeDTO employeeDTO)
         {
             try
@@ -92,6 +94,7 @@ namespace MealPlanner.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,HR")]
         public IActionResult Delete(int id, string userId)
         {
             try
@@ -107,6 +110,7 @@ namespace MealPlanner.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,HR")]
         public IActionResult GetByCompanyId(int companyId)
         {
             try
@@ -151,6 +155,7 @@ namespace MealPlanner.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,HR")]
         public IActionResult GetUsersWithoutEmployee()
         {
             try

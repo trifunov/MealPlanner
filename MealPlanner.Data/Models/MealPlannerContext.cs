@@ -19,6 +19,7 @@ namespace MealPlanner.Data.Models
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<MealAllergen> MealAllergens { get; set; }
         public DbSet<MealIngredient> MealIngredients { get; set; }
+        public DbSet<MealImage> MealImages { get; set; }
         public DbSet<Plan> Plans { get; set; }
         public DbSet<Order> Orders { get; set; }
 
@@ -88,6 +89,11 @@ namespace MealPlanner.Data.Models
             modelBuilder.Entity<Meal>()
             .HasMany(m => m.Plans)
             .WithOne(p => p.Meal);
+
+            modelBuilder.Entity<Meal>()
+            .HasOne(m => m.MealImage)
+            .WithOne(mi => mi.Meal)
+            .HasForeignKey<MealImage>(mi => mi.MealId);
 
             modelBuilder.Entity<Plan>()
                 .HasIndex(p => new { p.MealId, p.CompanyId, p.Shifts, p.Date })

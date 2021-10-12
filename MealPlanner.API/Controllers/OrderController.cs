@@ -33,8 +33,11 @@ namespace MealPlanner.API.Controllers
             {
                 var claimRole = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role);
                 var claimEmployeeId = _httpContextAccessor.HttpContext.User.FindFirst("EmployeeId");
-                orderDto.EmployeeId = (claimEmployeeId == null) ? 0 : Int32.Parse(claimEmployeeId.Value);               
-                return Ok(_orderManager.Add(orderDto, claimRole.Value));
+                orderDto.EmployeeId = (claimEmployeeId == null) ? 0 : Int32.Parse(claimEmployeeId.Value);
+
+                var roleValue = (claimRole != null) ? claimRole.Value : "";
+
+                return Ok(_orderManager.Add(orderDto, roleValue));
             }
             catch (Exception ex)
             {
@@ -55,7 +58,9 @@ namespace MealPlanner.API.Controllers
                     orderDto.EmployeeId = employeeId;
                 }
 
-                return Ok(_orderManager.Add(orderDto, claimRole.Value));
+                var roleValue = (claimRole != null) ? claimRole.Value : "";
+
+                return Ok(_orderManager.Add(orderDto, roleValue));
             }
             catch (Exception ex)
             {
@@ -76,7 +81,9 @@ namespace MealPlanner.API.Controllers
                     orderDto.EmployeeId =  employeeId;
                 }
 
-                _orderManager.EditFromList(orderDto, claimRole.Value);
+                var roleValue = (claimRole != null) ? claimRole.Value : "";
+
+                _orderManager.EditFromList(orderDto, roleValue);
                 return Ok();
             }
             catch (Exception ex)
@@ -105,7 +112,8 @@ namespace MealPlanner.API.Controllers
             try
             {
                 var claimRole = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role);
-                _orderManager.Delete(id, claimRole.Value);
+                var roleValue = (claimRole != null) ? claimRole.Value : "";
+                _orderManager.Delete(id, roleValue);
                 return Ok();
             }
             catch (Exception ex)

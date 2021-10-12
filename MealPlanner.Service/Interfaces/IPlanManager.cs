@@ -9,10 +9,11 @@ namespace MealPlanner.Service.Interfaces
     {
         void Add(PlanDTO planDto);
         List<PlanDTO> GetActivePlans();
-        List<PlanDTO> GetByCompanyId(int companyId);
+        PlanPaginationDTO GetByCompanyId(int page, int itemsPerPage, int companyId);
         PlanDTO GetByIds(List<int> ids);
         void Delete(List<int> ids);
         List<ReportResponseDTO> GetReports(ReportRequestDTO requestDto);
         List<ReportDetailedResponseDTO> GetDetailedReports(ReportDetailedRequestDTO requestDto);
+        void Update(PlanDTO planDto);
     }
 }

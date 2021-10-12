@@ -156,8 +156,6 @@ namespace MealPlanner.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ImageBase64");
-
                     b.Property<string>("Name");
 
                     b.Property<string>("NameForeign");
@@ -182,6 +180,17 @@ namespace MealPlanner.Data.Migrations
                     b.HasIndex("AllergenId");
 
                     b.ToTable("MealAllergens");
+                });
+
+            modelBuilder.Entity("MealPlanner.Data.Models.MealImage", b =>
+                {
+                    b.Property<int>("MealId");
+
+                    b.Property<string>("ImageBase64");
+
+                    b.HasKey("MealId");
+
+                    b.ToTable("MealImages");
                 });
 
             modelBuilder.Entity("MealPlanner.Data.Models.MealIngredient", b =>
@@ -380,6 +389,14 @@ namespace MealPlanner.Data.Migrations
                     b.HasOne("MealPlanner.Data.Models.Meal", "Meal")
                         .WithMany("MealAllergens")
                         .HasForeignKey("MealId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("MealPlanner.Data.Models.MealImage", b =>
+                {
+                    b.HasOne("MealPlanner.Data.Models.Meal", "Meal")
+                        .WithOne("MealImage")
+                        .HasForeignKey("MealPlanner.Data.Models.MealImage", "MealId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

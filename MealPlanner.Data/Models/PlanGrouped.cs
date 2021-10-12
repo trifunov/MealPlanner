@@ -12,7 +12,7 @@ namespace MealPlanner.Data.Models
         public DateTime EditableTo { get; set; }
         public DateTime Date { get; set; }
         public int CompanyId { get; set; }
-        public List<int> MealIds { get; set; }
-        public int TotalMeals { get; set; }
+        public List<Meal> Meals { get; set; }
+        //public int TotalMeals { get; set; }
     }
 }

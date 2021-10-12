@@ -7,5 +7,7 @@ namespace MealPlanner.Data.Models
     public class MealJoined : Meal
     {
         public int PlanId { get; set; }
+
+        public string ImageBase64 { get; set; }
     }
 }

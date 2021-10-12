@@ -1,5 +1,6 @@
 ﻿using MealPlanner.Data.Interfaces;
 using MealPlanner.Data.Models;
+using MealPlanner.Data.ModelsPagination;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,22 @@ namespace MealPlanner.Data.Concretes
             else
             {
                 throw new Exception("Plans not found");
-            } 
+            }
+        }
+
+        public void Update(List<int> ids, Plan planToUpdate)
+        {
+            var plans = _context.Plans.Where(x => ids.Contains(x.Id));
+
+            foreach (var plan in plans)
+            {
+                plan.Date = planToUpdate.Date;
+                plan.Shifts = planToUpdate.Shifts;
+                plan.EditableFrom = planToUpdate.EditableFrom;
+                plan.EditableTo = planToUpdate.EditableTo;
+            }
+
+            _context.SaveChanges();
         }
 
         public List<Plan> GetActivePlans(int companyId)
@@ -43,26 +59,35 @@ namespace MealPlanner.Data.Concretes
             return _context.Plans.Where(x => x.CompanyId == companyId && DateTime.Now > x.Date).ToList();
         }
 
-        public List<PlanGrouped> GetByCompanyIdGrouped(int companyId)
+        public PlanGroupedPagination GetByCompanyIdGrouped(int page, int itemsPerPage, int companyId)
         {
-            return _context.Plans.Where(x => x.CompanyId == companyId).GroupBy(p => new 
-            { 
-                p.CompanyId, 
-                p.Shifts, 
-                p.Date,
-                p.EditableFrom,
-                p.EditableTo
-            }).Select(g => new PlanGrouped
-            { 
-                Ids = g.Select(x => x.Id).ToList(),
-                CompanyId = g.Key.CompanyId,
-                Shifts = g.Key.Shifts,
-                Date = g.Key.Date,
-                EditableFrom = g.Key.EditableFrom,
-                EditableTo = g.Key.EditableTo,
-                MealIds = g.Select(x => x.MealId).ToList(),
-                TotalMeals = g.Count() 
-            }).OrderByDescending(x => x.Date).ToList();
+            var plans = _context.Plans.Include(x => x.Meal).Where(x => x.CompanyId == companyId);
+
+            var query = (from plan in plans
+                         group plan by new
+                         {
+                             plan.Date,
+                             plan.CompanyId,
+                             plan.Shifts,
+                             plan.EditableFrom,
+                             plan.EditableTo
+                         } into g
+                         select new PlanGrouped
+                         {
+                             Ids = g.Select(x => x.Id).ToList(),
+                             CompanyId = g.Key.CompanyId,
+                             Shifts = g.Key.Shifts,
+                             Date = g.Key.Date,
+                             EditableFrom = g.Key.EditableFrom,
+                             EditableTo = g.Key.EditableTo,
+                             Meals = g.Select(x => x.Meal).ToList(),
+                         }).OrderByDescending(x => x.Date);
+
+            return new PlanGroupedPagination
+            {
+                TotalRows = query.Count(),
+                Plans = query.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList()
+            };
         }
 
         public Plan GetById(int id)
@@ -78,9 +103,14 @@ namespace MealPlanner.Data.Concretes
                     select plan).FirstOrDefault();
         }
 
+        public Plan GetByMealId(int mealId, DateTime date, int companyId, DateTime editableFrom, DateTime editableTo, string shifts)
+        {
+            return _context.Plans.Include(x => x.Meal).Include(x => x.Company).FirstOrDefault(x => x.Meal.Id == mealId && x.Date == date && x.Company.Id == companyId && x.EditableFrom == editableFrom && x.EditableTo == editableTo && x.Shifts == shifts);
+        }
+
         public PlanGrouped GetByIds(List<int> ids)
         {
-            return _context.Plans.Where(x => ids.Contains(x.Id)).GroupBy(p => new
+            return _context.Plans.Include(x => x.Meal).Where(x => ids.Contains(x.Id)).GroupBy(p => new
             {
                 p.CompanyId,
                 p.Shifts,
@@ -95,7 +125,7 @@ namespace MealPlanner.Data.Concretes
                 Date = g.Key.Date,
                 EditableFrom = g.Key.EditableFrom,
                 EditableTo = g.Key.EditableTo,
-                MealIds = g.Select(x => x.MealId).ToList()
+                Meals = g.Select(x => x.Meal).ToList()
             }).FirstOrDefault();
         }
 

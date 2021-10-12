@@ -199,7 +199,7 @@ namespace MealPlanner.Service.Concretes
                 {
                     OrderId = order.Id,
                     IsDelivered = order.IsDelivered,
-                    ImageBase64 = order.Plan.Meal.ImageBase64,
+                    ImageBase64 = order.Plan.Meal.MealImage.ImageBase64,
                     Name = order.Plan.Meal.Name,
                     NameForeign = order.Plan.Meal.NameForeign
                 };

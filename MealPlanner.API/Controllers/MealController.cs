@@ -27,11 +27,11 @@ namespace MealPlanner.API.Controllers
         // GET: api/<controller>
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,Manager")]
-        public IActionResult GetAll()
+        public IActionResult GetAll(int page, int itemsPerPage)
         {
             try
             {
-                return Ok(_mealManager.GetAll());
+                return Ok(_mealManager.GetAll(page, itemsPerPage));
             }
             catch (Exception ex)
             {
@@ -48,6 +48,20 @@ namespace MealPlanner.API.Controllers
                 var claimCompanyId = _httpContextAccessor.HttpContext.User.FindFirst("CompanyId");
                 var companyId = (claimCompanyId == null) ? 0 : Int32.Parse(claimCompanyId.Value);
                 return Ok(_mealManager.GetValid(companyId,shift,date));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,Manager")]
+        public IActionResult GetById(int id)
+        {
+            try
+            {
+                return Ok(_mealManager.GetById(id));
             }
             catch (Exception ex)
             {
@@ -77,6 +91,21 @@ namespace MealPlanner.API.Controllers
             try
             {
                 _mealManager.Delete(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,Manager")]
+        public IActionResult Update([FromBody] MealDTO mealDto)
+        {
+            try
+            {
+                _mealManager.Update(mealDto);
                 return Ok();
             }
             catch (Exception ex)
