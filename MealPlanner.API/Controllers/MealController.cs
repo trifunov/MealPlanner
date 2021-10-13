@@ -27,11 +27,11 @@ namespace MealPlanner.API.Controllers
         // GET: api/<controller>
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,Manager")]
-        public IActionResult GetAll(int page, int itemsPerPage)
+        public IActionResult GetAll(int page, int itemsPerPage, bool paged)
         {
             try
             {
-                return Ok(_mealManager.GetAll(page, itemsPerPage));
+                return Ok(_mealManager.GetAll(page, itemsPerPage, paged));
             }
             catch (Exception ex)
             {

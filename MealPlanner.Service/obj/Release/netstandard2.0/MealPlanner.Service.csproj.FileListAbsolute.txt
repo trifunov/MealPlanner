@@ -3,10 +3,11 @@ C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Service\bin\Release\netstanda
 C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Service\bin\Release\netstandard2.0\MealPlanner.Service.pdb
 C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Service\bin\Release\netstandard2.0\MealPlanner.Data.dll
 C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Service\bin\Release\netstandard2.0\MealPlanner.Data.pdb
-C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Service\obj\Release\netstandard2.0\MealPlanner.Service.csprojAssemblyReference.cache
 C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Service\obj\Release\netstandard2.0\MealPlanner.Service.AssemblyInfoInputs.cache
 C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Service\obj\Release\netstandard2.0\MealPlanner.Service.AssemblyInfo.cs
 C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Service\obj\Release\netstandard2.0\MealPlanner.Service.csproj.CoreCompileInputs.cache
 C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Service\obj\Release\netstandard2.0\MealPlanner.Service.csproj.CopyComplete
 C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Service\obj\Release\netstandard2.0\MealPlanner.Service.dll
 C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Service\obj\Release\netstandard2.0\MealPlanner.Service.pdb
+C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Service\obj\Release\netstandard2.0\MealPlanner.Service.csproj.AssemblyReference.cache
+C:\Users\Pane\source\repos\MealPlanner\MealPlanner.Service\obj\Release\netstandard2.0\MealPlanner.Service.GeneratedMSBuildEditorConfig.editorconfig

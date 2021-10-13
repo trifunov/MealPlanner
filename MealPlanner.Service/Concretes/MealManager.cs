@@ -83,10 +83,10 @@ namespace MealPlanner.Service.Concretes
             _allergenRepository.DeleteMealAllergens(id);
         }
 
-        public MealPaginationDTO GetAll(int page, int itemsPerPage)
+        public MealPaginationDTO GetAll(int page, int itemsPerPage, bool paged)
         {
             var mealDtos = new List<MealDTO>();
-            var meals = _mealRepository.GetAll(page, itemsPerPage);
+            var meals = _mealRepository.GetAll(page, itemsPerPage, paged);
 
             foreach (var meal in meals.Meals)
             {

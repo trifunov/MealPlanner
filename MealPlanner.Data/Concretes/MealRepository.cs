@@ -52,15 +52,26 @@ namespace MealPlanner.Data.Concretes
             }
         }
 
-        public MealPagination GetAll(int page, int itemsPerPage)
+        public MealPagination GetAll(int page, int itemsPerPage, bool paged)
         {
             var meals = _context.Meals.Include(x => x.MealAllergens).ThenInclude(x => x.Allergen).Include(x => x.MealIngredients).ThenInclude(x => x.Ingredient);
 
-            return new MealPagination
+            if (paged)
             {
-                TotalRows = meals.Count(),
-                Meals = meals.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList()
-            };
+                return new MealPagination
+                {
+                    TotalRows = meals.Count(),
+                    Meals = meals.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList()
+                };
+            }
+            else
+            {
+                return new MealPagination
+                {
+                    TotalRows = meals.Count(),
+                    Meals = meals.ToList()
+                };
+            }
         }
 
         public Meal GetById(int id)
