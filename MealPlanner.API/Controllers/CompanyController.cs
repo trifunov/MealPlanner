@@ -14,7 +14,6 @@ namespace MealPlanner.API.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,HR")]
     public class CompanyController : ControllerBase
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -25,9 +24,9 @@ namespace MealPlanner.API.Controllers
             _companyManager = companyManager;
             _httpContextAccessor = httpContextAccessor;
         }
-
-        // GET: api/<controller>
+        
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,HR")]
         public IActionResult GetAll()
         {
             try
@@ -52,6 +51,7 @@ namespace MealPlanner.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,HR")]
         public IActionResult GetById(int id)
         {
             try
@@ -65,6 +65,7 @@ namespace MealPlanner.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,HR")]
         public IActionResult GetName(int id)
         {
             try
@@ -78,6 +79,7 @@ namespace MealPlanner.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         public IActionResult Add([FromBody] CompanyDTO companyDto)
         {
             try
@@ -92,6 +94,7 @@ namespace MealPlanner.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         public IActionResult Update([FromBody] CompanyDTO companyDto)
         {
             try
@@ -106,6 +109,7 @@ namespace MealPlanner.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         public IActionResult Delete(int id)
         {
             try

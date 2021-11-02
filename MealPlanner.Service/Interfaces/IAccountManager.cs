@@ -11,6 +11,7 @@ namespace MealPlanner.Service.Interfaces
         string Register(RegisterDTO registerDto);
         void Update(UserEmployeeDTO employeeDto);
         void Delete(string userId);
+        void ResetPassword(string userId, string password);
         JObject Login(LoginDTO loginDto);
         JObject LoginRfid(string rfid);
     }

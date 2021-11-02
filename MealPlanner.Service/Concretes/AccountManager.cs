@@ -99,6 +99,26 @@ namespace MealPlanner.Service.Concretes
             }
         }
 
+        public void ResetPassword(string userId, string password)
+        {
+            var user = _userManager.FindByIdAsync(userId).Result;
+            if (user != null)
+            {
+                var tempToken = _userManager.GeneratePasswordResetTokenAsync(user).Result;
+                var result = _userManager.ResetPasswordAsync(user, tempToken, password).Result;
+
+                if (!result.Succeeded)
+                {
+                    var errorMessage = "";
+                    foreach (var error in result.Errors)
+                    {
+                        errorMessage += error.Description + "\r\n";
+                    }
+                    throw new Exception(errorMessage);
+                }
+            }
+        }
+
         public JObject Login(LoginDTO loginDto)
         {
             var user = _userManager.FindByNameAsync(loginDto.Username).Result;

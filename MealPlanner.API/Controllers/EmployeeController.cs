@@ -27,7 +27,6 @@ namespace MealPlanner.API.Controllers
             _accountManager = accountManager;
         }
 
-        // GET: api/<controller>
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -161,6 +160,21 @@ namespace MealPlanner.API.Controllers
             try
             {
                 return Ok(_employeeManager.GetUsersWithoutEmployee());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,HR")]
+        public IActionResult ResetPassword(string userId, string password)
+        {
+            try
+            {
+                _accountManager.ResetPassword(userId, password);
+                return Ok();
             }
             catch (Exception ex)
             {
