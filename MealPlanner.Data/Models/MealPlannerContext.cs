@@ -22,6 +22,9 @@ namespace MealPlanner.Data.Models
         public DbSet<MealImage> MealImages { get; set; }
         public DbSet<Plan> Plans { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<SoftMeal> SoftMeals { get; set; }
+        public DbSet<SoftMealDetail> SoftMealDetails { get; set; }
+        public DbSet<DeliveryLog> DeliveryLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -78,6 +81,14 @@ namespace MealPlanner.Data.Models
             .HasMany(e => e.Orders)
             .WithOne(o => o.Employee);
 
+            modelBuilder.Entity<Employee>()
+            .HasMany(e => e.SoftMeals)
+            .WithOne(o => o.Employee);
+
+            modelBuilder.Entity<Employee>()
+            .HasMany(e => e.DeliveryLogs)
+            .WithOne(o => o.Employee);
+
             modelBuilder.Entity<Plan>()
             .HasMany(p => p.Orders)
             .WithOne(o => o.Plan);
@@ -94,6 +105,10 @@ namespace MealPlanner.Data.Models
             .HasOne(m => m.MealImage)
             .WithOne(mi => mi.Meal)
             .HasForeignKey<MealImage>(mi => mi.MealId);
+
+            modelBuilder.Entity<SoftMealDetail>()
+            .HasMany(e => e.SoftMeals)
+            .WithOne(o => o.SoftMealDetail);
 
             modelBuilder.Entity<Plan>()
                 .HasIndex(p => new { p.MealId, p.CompanyId, p.Shifts, p.Date })

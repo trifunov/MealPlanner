@@ -23,6 +23,18 @@ namespace MealPlanner.Data.Concretes
             _context.SaveChanges();
         }
 
+        public void AddDeliveryLog(DeliveryLog deliveryLog)
+        {
+            _context.DeliveryLogs.Add(deliveryLog);
+            _context.SaveChanges();
+        }
+
+        public void AddSoftMeal(SoftMeal softMeal)
+        {
+            _context.SoftMeals.Add(softMeal);
+            _context.SaveChanges();
+        }
+
         public Order GetByDateAndEmployee(Order order)
         {
            return _context.Orders.Include(x => x.Plan).FirstOrDefault(x => x.Plan.Date == order.Plan.Date && x.EmployeeId == order.EmployeeId);
@@ -76,7 +88,25 @@ namespace MealPlanner.Data.Concretes
 
         public Order GetByRfid(string rfid, DateTime date, int shift)
         {
-            return _context.Orders.Include(x => x.Employee).Include(x => x.Plan).ThenInclude(x => x.Meal).ThenInclude(x => x.MealImage).FirstOrDefault(x => x.Employee.Rfid == rfid && x.Plan.Date == date && x.Shift == shift && x.IsDelivered == false);
+            return _context.Orders
+                .Include(x => x.Employee)
+                .Include(x => x.Plan)
+                .ThenInclude(x => x.Meal)
+                .ThenInclude(x => x.MealImage)
+                .FirstOrDefault(x => x.Employee.Rfid == rfid && x.Plan.Date == date && x.Shift == shift);
+        }
+
+        public SoftMeal GetSoftMeal(string rfid, DateTime date, int shift)
+        {
+            return _context.SoftMeals
+                .Include(x => x.Employee)
+                .Include(x => x.SoftMealDetail)
+                .FirstOrDefault(x => x.Employee.Rfid == rfid && x.Date == date && x.Shift == shift);
+        }
+
+        public SoftMealDetail GetSoftMealDetail(int id)
+        {
+            return _context.SoftMealDetails.Find(id);
         }
 
         public int GetByDateAndShift(int employeeId, DateTime date, int shift)
@@ -105,6 +135,21 @@ namespace MealPlanner.Data.Concretes
             else
             {
                 throw new Exception("Order not found");
+            }
+        }
+
+        public void DeliveredSoftMeal(int id)
+        {
+            var softMeal = _context.SoftMeals.Find(id);
+
+            if (softMeal != null)
+            {
+                softMeal.IsDelivered = true;
+                _context.SaveChanges();
+            }
+            else
+            {
+                throw new Exception("Soft Meal not found");
             }
         }
 

@@ -133,8 +133,9 @@ namespace MealPlanner.Data.Concretes
         {
             var plans = _context.Plans.Include(x => x.Orders).Include(x => x.Meal).Where(x => x.CompanyId == companyId && x.Date >= fromDate && x.Date <= toDate);
             var orders = _context.Orders;
+            var softMeals = _context.SoftMeals.Include(x => x.SoftMealDetail).Include(x => x.Employee).ThenInclude(x => x.Company).Where(x => x.Employee.Company.Id == companyId && x.Date >= fromDate && x.Date <= toDate);
 
-            return (from plan in plans
+            var plansQuery = (from plan in plans
                         join order in orders on plan.Id equals order.PlanId
                         group plan by new 
                         { 
@@ -151,28 +152,52 @@ namespace MealPlanner.Data.Concretes
                             MealName = grouped.Key.Name,
                             TotalOrders = grouped.Count()
                         }).ToList();
+
+            var softMealsQuery = (from softMeal in softMeals
+                                  group softMeal by new
+                                  {
+                                      softMeal.Date,
+                                      softMeal.Employee.Company.Id,
+                                      softMeal.Shift,
+                                      softMeal.SoftMealDetailId,
+                                      softMeal.SoftMealDetail.Name
+                                  } into grouped
+                                  select new PlanReport
+                                  {
+                                      Date = grouped.Key.Date,
+                                      Shift = grouped.Key.Shift,
+                                      MealName = grouped.Key.Name,
+                                      TotalOrders = grouped.Count()
+                                  }).ToList();
+
+            plansQuery.AddRange(softMealsQuery);
+            return plansQuery.ToList();
         }
 
         public List<PlanReport> GetDetailedReports(int companyId, DateTime fromDate, DateTime toDate, int shift, int delivered)
         {
             var plans = _context.Plans.Include(x => x.Orders).Include(x => x.Meal).Where(x => x.CompanyId == companyId && x.Date >= fromDate && x.Date <= toDate);
             var orders = _context.Orders.AsQueryable();
+            var softMeals = _context.SoftMeals.Include(x => x.SoftMealDetail).Include(x => x.Employee).ThenInclude(x => x.Company).Where(x => x.Employee.Company.Id == companyId && x.Date >= fromDate && x.Date <= toDate);
 
             if (shift > -1)
             {
                 orders = orders.Where(x => x.Shift == shift);
+                softMeals = softMeals.Where(x => x.Shift == shift);
             }
 
             if(delivered == 0)
             {
                 orders = orders.Where(x => x.IsDelivered == false);
+                softMeals = softMeals.Where(x => x.IsDelivered == false);
             }
             else if(delivered == 1)
             {
                 orders = orders.Where(x => x.IsDelivered == true);
+                softMeals = softMeals.Where(x => x.IsDelivered == true);
             }
 
-            return (from plan in plans
+            var plansQuery = (from plan in plans
                     join order in orders on plan.Id equals order.PlanId
                     select new PlanReport
                     {
@@ -181,6 +206,18 @@ namespace MealPlanner.Data.Concretes
                         MealName = plan.Meal.Name,
                         IsDelivered = order.IsDelivered
                     }).ToList();
+
+            var softMealsQuery = (from softMeal in softMeals
+                                  select new PlanReport
+                                  {
+                                      Date = softMeal.Date,
+                                      Shift = softMeal.Shift,
+                                      MealName = softMeal.SoftMealDetail.Name,
+                                      IsDelivered = softMeal.IsDelivered
+                                  }).ToList();
+
+            plansQuery.AddRange(softMealsQuery);
+            return plansQuery.ToList();
         }
     }
 }

@@ -39,7 +39,7 @@ namespace MealPlanner.Service.Concretes
             SmtpClient smtpClient = new SmtpClient();
             smtpClient.UseDefaultCredentials = true;
             smtpClient.Host = "mail.dalma.com.mk";
-            smtpClient.Port = Convert.ToInt32("587");
+            smtpClient.Port = 25;
             smtpClient.EnableSsl = false;
             smtpClient.Credentials = new System.Net.NetworkCredential("robot", "K4jBC37>PA_Nf%\"^");
             smtpClient.Send(message);

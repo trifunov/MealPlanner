@@ -11,7 +11,7 @@ namespace MealPlanner.Service.Interfaces
         void EditFromList(OrderForEditDTO orderDto, string role);
         void Update(OrderDTO orderDto);
         OrderAddResponseDTO Delete(int id, string role);
-        void Delivered(int id);
+        void Delivered(int orderId, int softMealId, int employeeId);
         int GetByDateAndShift(int employeeId, DateTime date, int shift);
         OrderForEditDTO GetById(int id);
         OrderDeliveryDTO GetByRfid(string rfid, DateTime date, int shift);

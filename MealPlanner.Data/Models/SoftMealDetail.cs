@@ -6,17 +6,14 @@ using System.Text;
 
 namespace MealPlanner.Data.Models
 {
-    public class Employee
+    public class SoftMealDetail
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string Rfid { get; set; }
-        public string UserId { get; set; }
-        public ApplicationUser User { get; set; }
-        public Company Company { get; set; }
-        public ICollection<Order> Orders { get; set; }
+        public string ImageBase64 { get; set; }
+        public string Name { get; set; }
+        public string NameForeign { get; set; }
         public ICollection<SoftMeal> SoftMeals { get; set; }
-        public ICollection<DeliveryLog> DeliveryLogs { get; set; }
     }
 }

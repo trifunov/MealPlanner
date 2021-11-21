@@ -123,11 +123,13 @@ namespace MealPlanner.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult Delivered(int id)
+        public IActionResult Delivered(int orderId, int softMealId)
         {
             try
             {
-                _orderManager.Delivered(id);
+                var claimEmployeeId = _httpContextAccessor.HttpContext.User.FindFirst("EmployeeId");
+                var employeeId = (claimEmployeeId == null) ? 0 : Int32.Parse(claimEmployeeId.Value);
+                _orderManager.Delivered(orderId, softMealId, employeeId);
                 return Ok();
             }
             catch (Exception ex)
