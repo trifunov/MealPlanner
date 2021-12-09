@@ -68,15 +68,29 @@ namespace MealPlanner.Data.Concretes
             }
         }
 
-        public List<Company> GetAll(int companyId)
+        public List<CompanyNoImage> GetAll(int companyId)
         {
-            if(companyId == 0)
+            if (companyId == 0)
             {
-                return _context.Companies.Include(x => x.Employees).ToList();
+                return _context.Companies.Include(x => x.Employees).Select(x =>
+                    new CompanyNoImage
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        Employees = x.Employees,
+                        Plans = x.Plans
+                    }).ToList();
             }
             else
             {
-                return _context.Companies.Where(x => x.Id == companyId).Include(x => x.Employees).ToList();
+                return _context.Companies.Where(x => x.Id == companyId).Include(x => x.Employees).Select(x =>
+                    new CompanyNoImage
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        Employees = x.Employees,
+                        Plans = x.Plans
+                    }).ToList();
             }
         }
     }

@@ -32,8 +32,8 @@ namespace MealPlanner.API.Controllers
         {
             try
             {
-                var claimCompanyId = _httpContextAccessor.HttpContext.User.FindFirst("CompanyId");
-                planDto.CompanyId = (claimCompanyId == null) ? 0 : Int32.Parse(claimCompanyId.Value);
+                //var claimCompanyId = _httpContextAccessor.HttpContext.User.FindFirst("CompanyId");
+                //planDto.CompanyId = (claimCompanyId == null) ? 0 : Int32.Parse(claimCompanyId.Value);
                 _planManager.Add(planDto);
                 return Ok();
             }
@@ -49,8 +49,8 @@ namespace MealPlanner.API.Controllers
         {
             try
             {
-                var claimCompanyId = _httpContextAccessor.HttpContext.User.FindFirst("CompanyId");
-                planDto.CompanyId = (claimCompanyId == null) ? 0 : Int32.Parse(claimCompanyId.Value);
+                //var claimCompanyId = _httpContextAccessor.HttpContext.User.FindFirst("CompanyId");
+                //planDto.CompanyId = (claimCompanyId == null) ? 0 : Int32.Parse(claimCompanyId.Value);
                 _planManager.Update(planDto);
                 return Ok();
             }
@@ -62,12 +62,12 @@ namespace MealPlanner.API.Controllers
 
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,Manager")]
-        public IActionResult GetByCompanyId(int page, int itemsPerPage)
+        public IActionResult GetByCompanyId(int companyId, int page, int itemsPerPage)
         {
             try
             {
-                var claimCompanyId = _httpContextAccessor.HttpContext.User.FindFirst("CompanyId");
-                var companyId = (claimCompanyId == null) ? 0 : Int32.Parse(claimCompanyId.Value);
+                //var claimCompanyId = _httpContextAccessor.HttpContext.User.FindFirst("CompanyId");
+                //var companyId = (claimCompanyId == null) ? 0 : Int32.Parse(claimCompanyId.Value);
                 return Ok(_planManager.GetByCompanyId(page, itemsPerPage, companyId));
             }
             catch (Exception ex)

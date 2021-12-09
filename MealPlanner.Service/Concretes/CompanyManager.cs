@@ -49,7 +49,7 @@ namespace MealPlanner.Service.Concretes
                 var companyDto = new CompanyDTO();
                 companyDto.Id = company.Id;
                 companyDto.Name = company.Name;
-                companyDto.ImageBase64 = company.ImageBase64;
+                companyDto.ImageBase64 = "";
                 companyDto.TotalEmployees = company.Employees.Count;
                 companyDTOs.Add(companyDto);
             }
