@@ -60,15 +60,15 @@ namespace MealPlanner.API.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,Manager")]
-        public IActionResult GetByCompanyId(int companyId, int page, int itemsPerPage)
+        public IActionResult GetByCompanyId([FromBody] PlanGetByCompanyIdRequestDTO requestDto)
         {
             try
             {
                 //var claimCompanyId = _httpContextAccessor.HttpContext.User.FindFirst("CompanyId");
                 //var companyId = (claimCompanyId == null) ? 0 : Int32.Parse(claimCompanyId.Value);
-                return Ok(_planManager.GetByCompanyId(page, itemsPerPage, companyId));
+                return Ok(_planManager.GetByCompanyId(requestDto));
             }
             catch (Exception ex)
             {

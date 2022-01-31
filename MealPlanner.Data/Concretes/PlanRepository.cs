@@ -59,9 +59,9 @@ namespace MealPlanner.Data.Concretes
             return _context.Plans.Where(x => x.CompanyId == companyId && DateTime.Now > x.Date).ToList();
         }
 
-        public PlanGroupedPagination GetByCompanyIdGrouped(int page, int itemsPerPage, int companyId)
+        public PlanGroupedPagination GetByCompanyIdGrouped(int page, int itemsPerPage, int companyId, DateTime fromDate, DateTime toDate)
         {
-            var plans = _context.Plans.Include(x => x.Meal).Where(x => x.CompanyId == companyId);
+            var plans = _context.Plans.Include(x => x.Meal).Where(x => x.CompanyId == companyId && x.Date >= fromDate && x.Date <= toDate);
 
             var query = (from plan in plans
                          group plan by new

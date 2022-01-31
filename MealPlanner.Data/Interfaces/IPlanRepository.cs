@@ -12,7 +12,7 @@ namespace MealPlanner.Data.Interfaces
         void Delete(List<int> ids);
         void Update(List<int> ids, Plan planToUpdate);
         List<Plan> GetActivePlans(int companyId);
-        PlanGroupedPagination GetByCompanyIdGrouped(int page, int itemsPerPage, int companyId);
+        PlanGroupedPagination GetByCompanyIdGrouped(int page, int itemsPerPage, int companyId, DateTime fromDate, DateTime toDate);
         PlanGrouped GetByIds(List<int> ids);
         Plan GetById(int id);
         Plan GetByOrderId(int orderId);

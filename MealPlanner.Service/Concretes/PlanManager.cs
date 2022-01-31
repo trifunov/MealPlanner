@@ -111,9 +111,9 @@ namespace MealPlanner.Service.Concretes
             throw new NotImplementedException();
         }
 
-        public PlanPaginationDTO GetByCompanyId(int page, int itemsPerPage, int companyId)
+        public PlanPaginationDTO GetByCompanyId(PlanGetByCompanyIdRequestDTO requestDto)
         {
-            var plans = _planRepository.GetByCompanyIdGrouped(page, itemsPerPage, companyId);
+            var plans = _planRepository.GetByCompanyIdGrouped(requestDto.Page, requestDto.ItemsPerPage, requestDto.CompanyId, requestDto.FromDate, requestDto.ToDate);
             var planDtos = new List<PlanDTO>();
 
             foreach(var item in plans.Plans)
