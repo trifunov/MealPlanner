@@ -3,6 +3,7 @@ using MealPlanner.Data.Models;
 using MealPlanner.Service.DTOs;
 using MealPlanner.Service.Helpers;
 using MealPlanner.Service.Interfaces;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -68,7 +69,7 @@ namespace MealPlanner.Service.Concretes
                 if (orderDb == null)
                 {
                     _orderRepository.Add(order);
-                    var emailBody = _emailManager.PrepareAddEmail(employee.Rfid, order.Plan.Date, order.Plan.Meal.Name);
+                    var emailBody = _emailManager.PrepareAddEmail(employee.Rfid, order.Plan.Date, order.Plan.Meal.Name, employee.Company.Name);
                     _emailManager.SendEmail("Додаден оброк", emailBody, employee.User.Email);
                     _emailManager.SendEmail("Додаден оброк", emailBody, "naracki@dalma.com.mk");
                 }
@@ -78,7 +79,7 @@ namespace MealPlanner.Service.Concretes
                     var oldMeal = orderDb.Plan.Meal.Name;
 
                     _orderRepository.Update(order);
-                    var emailBody = _emailManager.PrepareEditEmail(employee.Rfid, order.Plan.Date, oldMeal, order.Plan.Meal.Name);
+                    var emailBody = _emailManager.PrepareEditEmail(employee.Rfid, order.Plan.Date, oldMeal, order.Plan.Meal.Name, employee.Company.Name);
                     _emailManager.SendEmail("Променет оброк", emailBody, employee.User.Email);
                     _emailManager.SendEmail("Променет оброк", emailBody, "naracki@dalma.com.mk");
                 }
@@ -114,7 +115,7 @@ namespace MealPlanner.Service.Concretes
                 var oldMeal = _orderRepository.GetById(order.Id).Plan.Meal.Name;
 
                 _orderRepository.Update(order);
-                var emailBody = _emailManager.PrepareEditEmail(employee.Rfid, order.Plan.Date, oldMeal, order.Plan.Meal.Name);
+                var emailBody = _emailManager.PrepareEditEmail(employee.Rfid, order.Plan.Date, oldMeal, order.Plan.Meal.Name, employee.Company.Name);
                 _emailManager.SendEmail("Променет оброк", emailBody, employee.User.Email);
                 _emailManager.SendEmail("Променет оброк", emailBody, "naracki@dalma.com.mk");
             }
@@ -151,7 +152,7 @@ namespace MealPlanner.Service.Concretes
             else if(role == "HR")
             {
                 _orderRepository.Delete(id);
-                var emailBody = _emailManager.PrepareDeleteEmail(employee.Rfid, order.Plan.Date);
+                var emailBody = _emailManager.PrepareDeleteEmail(employee.Rfid, order.Plan.Date, employee.Company.Name);
                 _emailManager.SendEmail("Откажан оброк", emailBody, employee.User.Email);
                 _emailManager.SendEmail("Откажан оброк", emailBody, "naracki@dalma.com.mk");
                 return new OrderAddResponseDTO { Message = "Променет оброк надвор од периодот за промени" };

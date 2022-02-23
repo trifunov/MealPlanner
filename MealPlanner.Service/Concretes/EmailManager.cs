@@ -9,22 +9,22 @@ namespace MealPlanner.Service.Concretes
 {
     public class EmailManager : IEmailManager
     {
-        public string PrepareAddEmail(string rfid, DateTime date, string meal)
+        public string PrepareAddEmail(string rfid, DateTime date, string meal, string company)
         {
-            string m = File.ReadAllText(@"c:\inetpub\wwwroot\mi\html_promena_obrok.txt");
-            return m.Replace("[idno]", rfid).Replace("[dayte]", date.ToString("yyyy-MM-dd")).Replace("[dodobrok]", meal);
+            string m = File.ReadAllText(@"c:\inetpub\wwwroot\mi\html_dodavanje_obrok.txt");
+            return m.Replace("[idno]", rfid).Replace("[dayte]", date.ToString("yyyy-MM-dd")).Replace("[dodobrok]", meal).Replace("[kompanija]", company);
         }
 
-        public string PrepareDeleteEmail(string rfid, DateTime date)
+        public string PrepareDeleteEmail(string rfid, DateTime date, string company)
         {
-            string m = File.ReadAllText(@"c:\inetpub\wwwroot\mi\html_promena_obrok.txt");
-            return m.Replace("[idno]", rfid).Replace("[dayte]", date.ToString("yyyy-MM-dd"));
+            string m = File.ReadAllText(@"c:\inetpub\wwwroot\mi\html_otkazuvanje_obrok.txt");
+            return m.Replace("[idno]", rfid).Replace("[dayte]", date.ToString("yyyy-MM-dd")).Replace("[kompanija]", company);
         }
 
-        public string PrepareEditEmail(string rfid, DateTime date, string oldMeal, string newMeal)
+        public string PrepareEditEmail(string rfid, DateTime date, string oldMeal, string newMeal, string company)
         {
             string m = File.ReadAllText(@"c:\inetpub\wwwroot\mi\html_promena_obrok.txt");
-            return m.Replace("[idno]", rfid).Replace("[dayte]", date.ToString("yyyy-MM-dd")).Replace("[preobrok]", oldMeal).Replace("[novobrok]", newMeal);
+            return m.Replace("[idno]", rfid).Replace("[dayte]", date.ToString("yyyy-MM-dd")).Replace("[preobrok]", oldMeal).Replace("[novobrok]", newMeal).Replace("[kompanija]", company);
         }
 
         public void SendEmail(string subject, string body, string toMail)
