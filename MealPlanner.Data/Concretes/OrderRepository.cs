@@ -130,6 +130,7 @@ namespace MealPlanner.Data.Concretes
             if (order != null)
             {
                 order.IsDelivered = true;
+                order.DeliveredDate = DateTime.Now;
                 _context.SaveChanges();
             }
             else
@@ -145,6 +146,7 @@ namespace MealPlanner.Data.Concretes
             if (softMeal != null)
             {
                 softMeal.IsDelivered = true;
+                softMeal.DeliveredDate = DateTime.Now;
                 _context.SaveChanges();
             }
             else
@@ -156,7 +158,11 @@ namespace MealPlanner.Data.Concretes
         public List<Order> GetFiltered(List<int> employeeIds, DateTime fromDate, DateTime toDate)
         {
             toDate = toDate.AddHours(23).AddMinutes(59).AddSeconds(59);
-            return _context.Orders.Include(x => x.Employee).ThenInclude(x => x.User).Include(x => x.Plan).ThenInclude(x => x.Meal).Where(x => employeeIds.Contains(x.Employee.Id) && x.Plan.Date > fromDate && x.Plan.Date < toDate).OrderByDescending(x => x.Plan.Date).ToList();
+            return _context.Orders
+                .Include(x => x.Employee).ThenInclude(x => x.User)
+                .Include(x => x.Plan).ThenInclude(x => x.Meal)
+                .Where(x => employeeIds.Contains(x.Employee.Id) && x.Plan.Date > fromDate && x.Plan.Date < toDate)
+                .OrderByDescending(x => x.Plan.Date).ToList();
         }
     }
 }

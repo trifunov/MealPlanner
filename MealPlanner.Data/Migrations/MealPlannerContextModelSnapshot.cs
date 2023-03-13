@@ -237,6 +237,8 @@ namespace MealPlanner.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime?>("DeliveredDate");
+
                     b.Property<int>("EmployeeId");
 
                     b.Property<bool>("IsDelivered");
@@ -290,6 +292,8 @@ namespace MealPlanner.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("Date");
+
+                    b.Property<DateTime?>("DeliveredDate");
 
                     b.Property<int>("EmployeeId");
 

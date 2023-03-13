@@ -12,7 +12,7 @@ namespace MealPlanner.Data.Interfaces
         void Delete(int id);
         void Update(Meal meal, string image);
         Meal GetById(int id);
-        MealPagination GetAll(int page, int itemsPerPage, bool paged);
+        MealPagination GetAll(string mealName, int page, int itemsPerPage, bool paged);
         List<MealJoined> GetValid(int companyId, int shift, DateTime date);
     }
 }

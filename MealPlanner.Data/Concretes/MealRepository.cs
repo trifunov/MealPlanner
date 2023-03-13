@@ -52,9 +52,9 @@ namespace MealPlanner.Data.Concretes
             }
         }
 
-        public MealPagination GetAll(int page, int itemsPerPage, bool paged)
+        public MealPagination GetAll(string mealName, int page, int itemsPerPage, bool paged)
         {
-            var meals = _context.Meals.Include(x => x.MealAllergens).ThenInclude(x => x.Allergen).Include(x => x.MealIngredients).ThenInclude(x => x.Ingredient);
+            var meals = _context.Meals.Where(x => x.Name.Contains(mealName)).Include(x => x.MealAllergens).ThenInclude(x => x.Allergen).Include(x => x.MealIngredients).ThenInclude(x => x.Ingredient);
 
             if (paged)
             {

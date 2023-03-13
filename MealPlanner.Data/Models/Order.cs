@@ -12,6 +12,7 @@ namespace MealPlanner.Data.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public bool IsDelivered { get; set; }
+        public DateTime? DeliveredDate { get; set; }
         public int PlanId { get; set; }
         public int Shift { get; set; }
         public int EmployeeId { get; set; }

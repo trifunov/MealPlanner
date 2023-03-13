@@ -177,7 +177,7 @@ namespace MealPlanner.Data.Concretes
         public List<PlanReport> GetDetailedReports(int companyId, DateTime fromDate, DateTime toDate, int shift, int delivered)
         {
             var plans = _context.Plans.Include(x => x.Orders).Include(x => x.Meal).Where(x => x.CompanyId == companyId && x.Date >= fromDate && x.Date <= toDate);
-            var orders = _context.Orders.AsQueryable();
+            var orders = _context.Orders.Include(x => x.Employee).AsQueryable();
             var softMeals = _context.SoftMeals.Include(x => x.SoftMealDetail).Include(x => x.Employee).ThenInclude(x => x.Company).Where(x => x.Employee.Company.Id == companyId && x.Date >= fromDate && x.Date <= toDate);
 
             if (shift > -1)
@@ -204,7 +204,10 @@ namespace MealPlanner.Data.Concretes
                         Date = plan.Date,
                         Shift = order.Shift,
                         MealName = plan.Meal.Name,
-                        IsDelivered = order.IsDelivered
+                        IsDelivered = order.IsDelivered,
+                        DeliveredDate = order.DeliveredDate,
+                        Username = order.Employee.User.UserName,
+                        Rfid = order.Employee.Rfid
                     }).ToList();
 
             var softMealsQuery = (from softMeal in softMeals
@@ -213,7 +216,10 @@ namespace MealPlanner.Data.Concretes
                                       Date = softMeal.Date,
                                       Shift = softMeal.Shift,
                                       MealName = softMeal.SoftMealDetail.Name,
-                                      IsDelivered = softMeal.IsDelivered
+                                      IsDelivered = softMeal.IsDelivered,
+                                      DeliveredDate = softMeal.DeliveredDate,
+                                      Username = softMeal.Employee.User.UserName,
+                                      Rfid = softMeal.Employee.Rfid
                                   }).ToList();
 
             plansQuery.AddRange(softMealsQuery);

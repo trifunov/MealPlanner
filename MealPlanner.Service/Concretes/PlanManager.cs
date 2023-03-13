@@ -230,7 +230,10 @@ namespace MealPlanner.Service.Concretes
                     Date = report.Date,
                     MealName = report.MealName,
                     Shift = PlanHelper.GetShiftName(report.Shift),
-                    IsDelivered = report.IsDelivered
+                    Username = report.Username,
+                    Rfid = report.Rfid,
+                    IsDelivered = report.IsDelivered,
+                    DeliveredDate = report.DeliveredDate
                 });
             }
 

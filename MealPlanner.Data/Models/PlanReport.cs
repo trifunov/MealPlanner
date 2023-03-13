@@ -10,6 +10,9 @@ namespace MealPlanner.Data.Models
         public int Shift { get; set; }
         public string MealName { get; set; }
         public bool IsDelivered { get; set; }
+        public DateTime? DeliveredDate { get; set; }
+        public string Username { get; set; }
+        public string Rfid { get; set; }
         public int TotalOrders { get; set; }
         public int TotalDelivered { get; set; }
     }
