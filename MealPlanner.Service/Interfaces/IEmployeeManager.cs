@@ -15,6 +15,7 @@ namespace MealPlanner.Service.Interfaces
         EmployeeDTO GetByRfid(string rfid);
         List<EmployeeDTO> GetAll();
         UserEmployeePaginationDTO GetByCompanyId(int companyId, string employeeName = "", int page = 1, int itemsPerPage = 20, bool paged = false);
+        List<UserEmployeeDTO> GetByCompanyIdList(int companyId, string employeeName = "", int page = 1, int itemsPerPage = 20, bool paged = false);
         List<UserEmployeeDTO> GetUsersWithoutEmployee();
     }
 }

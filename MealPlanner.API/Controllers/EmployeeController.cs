@@ -145,7 +145,7 @@ namespace MealPlanner.API.Controllers
                     companyId = Int32.Parse(claimCompanyId.Value);
                 }
 
-                return Ok(_employeeManager.GetByCompanyId(companyId));
+                return Ok(_employeeManager.GetByCompanyIdList(companyId));
             }
             catch (Exception ex)
             {

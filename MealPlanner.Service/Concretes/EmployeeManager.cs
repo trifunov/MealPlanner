@@ -125,6 +125,28 @@ namespace MealPlanner.Service.Concretes
             };
         }
 
+        public List<UserEmployeeDTO> GetByCompanyIdList(int companyId, string employeeName = "", int page = 1, int itemsPerPage = 20, bool paged = false)
+        {
+            var employeeDTOs = new List<UserEmployeeDTO>();
+            employeeName = (employeeName == null) ? "" : employeeName;
+            var employees = _employeeRepository.GetByCompanyId(companyId, employeeName, page, itemsPerPage, paged);
+
+            foreach (var employee in employees.Employees)
+            {
+                var employeeDTO = new UserEmployeeDTO();
+                employeeDTO.Id = employee.Id;
+                employeeDTO.Rfid = employee.Rfid;
+                employeeDTO.UserId = employee.UserId;
+                employeeDTO.CompanyId = employee.Company.Id;
+                employeeDTO.CompanyName = employee.Company.Name;
+                employeeDTO.Username = employee.User.UserName;
+                employeeDTO.Role = employee.Role;
+                employeeDTOs.Add(employeeDTO);
+            }
+
+            return employeeDTOs;
+        }
+
         public List<UserEmployeeDTO> GetUsersWithoutEmployee()
         {
             var employeeDTOs = new List<UserEmployeeDTO>();
