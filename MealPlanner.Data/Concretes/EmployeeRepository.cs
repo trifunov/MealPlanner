@@ -1,5 +1,6 @@
 ﻿using MealPlanner.Data.Interfaces;
 using MealPlanner.Data.Models;
+using MealPlanner.Data.ModelsPagination;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -118,9 +119,9 @@ namespace MealPlanner.Data.Concretes
             return _context.Users.Include(x => x.Employee).Where(x => x.Employee == null).ToList();
         }
 
-        public List<EmployeeJoined> GetByCompanyId(int companyId)
+        public EmployeePagination GetByCompanyId(int companyId, string employeeName, int page, int itemsPerPage, bool paged)
         {
-            var employees = _context.Employees.Include(x => x.Company).Include(x => x.User).Where(x => x.Company.Id == companyId);
+            var employees = _context.Employees.Include(x => x.Company).Include(x => x.User).Where(x => x.Company.Id == companyId && x.User.UserName.Contains(employeeName));
 
             var query = from employee in employees
                         join userRole in _context.UserRoles on employee.UserId equals userRole.UserId 
@@ -139,7 +140,22 @@ namespace MealPlanner.Data.Concretes
                             Role = (gr == null) ? "" : gr.Name
                         };
 
-            return query.ToList();
+            if (paged)
+            {
+                return new EmployeePagination
+                {
+                    TotalRows = query.Count(),
+                    Employees = query.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList()
+                };
+            }
+            else
+            {
+                return new EmployeePagination
+                {
+                    TotalRows = query.Count(),
+                    Employees = query.ToList()
+                };
+            }
         }
     }
 }

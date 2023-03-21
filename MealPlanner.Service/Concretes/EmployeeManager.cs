@@ -99,12 +99,13 @@ namespace MealPlanner.Service.Concretes
             return employeeDTO;
         }
 
-        public List<UserEmployeeDTO> GetByCompanyId(int companyId)
+        public UserEmployeePaginationDTO GetByCompanyId(int companyId, string employeeName = "", int page = 1, int itemsPerPage = 20, bool paged = false)
         {
             var employeeDTOs = new List<UserEmployeeDTO>();
-            var employees = _employeeRepository.GetByCompanyId(companyId);
+            employeeName = (employeeName == null) ? "" : employeeName;
+            var employees = _employeeRepository.GetByCompanyId(companyId, employeeName, page, itemsPerPage, paged);
 
-            foreach (var employee in employees)
+            foreach (var employee in employees.Employees)
             {
                 var employeeDTO = new UserEmployeeDTO();
                 employeeDTO.Id = employee.Id;
@@ -117,7 +118,11 @@ namespace MealPlanner.Service.Concretes
                 employeeDTOs.Add(employeeDTO);
             }
 
-            return employeeDTOs;
+            return new UserEmployeePaginationDTO
+            {
+                UserEmployees = employeeDTOs,
+                TotalRows = employees.TotalRows
+            };
         }
 
         public List<UserEmployeeDTO> GetUsersWithoutEmployee()

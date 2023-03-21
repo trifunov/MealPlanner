@@ -1,6 +1,8 @@
 ﻿using MealPlanner.Data.Models;
+using MealPlanner.Data.ModelsPagination;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Text;
 
 namespace MealPlanner.Data.Interfaces
@@ -14,7 +16,7 @@ namespace MealPlanner.Data.Interfaces
         Employee GetByUserId(string userId);
         Employee GetByRfid(string rfid);
         List<Employee> GetAll();
-        List<EmployeeJoined> GetByCompanyId(int companyId);
+        EmployeePagination GetByCompanyId(int companyId, string employeeName, int page, int itemsPerPage, bool paged);
         List<ApplicationUser> GetUsersWithoutEmployee();
     }
 }

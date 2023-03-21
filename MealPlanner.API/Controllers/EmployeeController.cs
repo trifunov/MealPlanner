@@ -110,7 +110,7 @@ namespace MealPlanner.API.Controllers
 
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,HR")]
-        public IActionResult GetByCompanyId(int companyId)
+        public IActionResult GetByCompanyId(int companyId, string employeeName, int page, int itemsPerPage, bool paged)
         {
             try
             {
@@ -124,7 +124,7 @@ namespace MealPlanner.API.Controllers
                     }
                 }
 
-                return Ok(_employeeManager.GetByCompanyId(companyId));
+                return Ok(_employeeManager.GetByCompanyId(companyId, employeeName, page, itemsPerPage, paged));
             }
             catch (Exception ex)
             {
